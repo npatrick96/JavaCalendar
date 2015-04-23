@@ -5,7 +5,7 @@ import SQL.QuerySet;
 import javafx.fxml.FXML;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
-import javafx.scene.canvas.Canvas;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -38,7 +38,7 @@ public class MainController {
     Date selected = new Date();
     Button selectedBtn;
     String monthYear;
-    int scale = 10;
+    int scale = 15;
 
     @FXML
     void initialize(){
@@ -114,12 +114,12 @@ public class MainController {
     }
 
     void drawDayStructure(){
-        int totalHeight = scale * 2 * 25;
+        int totalHeight = scale * 2 * 26;
         setScrollableHeight(totalHeight);
 
         Pane content = (Pane) dayView.getContent();
         content.getChildren().removeAll(content.getChildren());
-
+        setHalfHourLine(scale);
         for (int i = 1; i < 24; ++i){
             int y = i * 2 * scale;
             setHourLine("" + i, y);
@@ -127,13 +127,14 @@ public class MainController {
         }
         setHourLine("24", 48 * scale);
 
+        setHalfHourLine(50 * scale);
+
         loadDay();
     }
 
     void setScrollableHeight(int height){
         Bounds newBounds = new BoundingBox(0, 0, dayView.getViewportBounds().getWidth(), height);
         dayView.setViewportBounds(newBounds);
-        dayView.getContent().setScaleX(50);
     }
 
     double getDayViewWidth(){
@@ -150,24 +151,25 @@ public class MainController {
         hourLine.setStrokeWidth(1);
 
         Label hour = new Label(label);
-        Bounds hourBounds = new BoundingBox(0, y, 30, 30);
+        hour.setTranslateY(y - scale);
 
-        addLine(hourLine);
+        addToCanvas(hourLine);
+        addToCanvas(hour);
     }
 
     void setHalfHourLine(int y){
         Line hourLine = new Line();
-        hourLine.setStartX(30);
+        hourLine.setStartX(0);
         hourLine.setStartY(y);
         hourLine.setEndX(getDayViewWidth() / 2);
         hourLine.setEndY(y);
 
         hourLine.setStrokeWidth(0.5);
 
-        addLine(hourLine);
+        addToCanvas(hourLine);
     }
 
-    void addLine(Line l){
+    void addToCanvas(Node l){
         Pane canvas = (Pane)dayView.getContent();
         canvas.getChildren().addAll(l);
     }
