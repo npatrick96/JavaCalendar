@@ -27,6 +27,8 @@ public class AppointmentTest {
 
     @Test
     public void testSaving(){
+        new Appointment().drop();
+
         for (int i = 0; i < 20; ++i){
             Appointment appt = new Appointment();
             appt.address = "1321 Wirt Road";
@@ -39,8 +41,5 @@ public class AppointmentTest {
 
         ArrayList<Appointment> appointments = new Appointment().all();
         assertTrue(appointments.size() == 20);
-        for (Appointment appt : appointments){
-            System.out.println(appt.name + ", " + appt.description);
-        }
     }
 }

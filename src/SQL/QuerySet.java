@@ -70,6 +70,10 @@ public class QuerySet<T extends SQLRow> {
     private void populateIDs(){
         try {
             ResultSet ids = query(this.query);
+            if (ids == null) {
+                this.size = 0;
+                return;
+            }
             while(ids.next()){
                 Integer id = ids.getInt(0);
                 this.cached.add(id);
@@ -101,12 +105,31 @@ public class QuerySet<T extends SQLRow> {
             set = q.executeQuery(query);
 
         } catch (SQLException e){
-            e.printStackTrace();
         }
         catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
 
         return set;
+    }
+
+    public boolean tableExists() {
+        try {
+            String check = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableName + "'";
+            ResultSet data = query(check);
+            boolean tableExists = isResultSetEmpty(data);
+            data.close();
+            return tableExists;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isResultSetEmpty(ResultSet set) throws SQLException {
+        if (set.isBeforeFirst()){
+            return true;
+        }
+        return false;
     }
 }
