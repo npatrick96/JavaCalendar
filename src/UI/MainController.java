@@ -16,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
+import java.text.DateFormatSymbols;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -38,13 +39,15 @@ public class MainController {
     Slider uiScale;
 
     Date selected = new Date();
-    Button selectedBtn;
     String monthYear;
     int scale = 25;
 
+    Calendar calendar = Calendar.getInstance();
+
     @FXML
     void initialize(){
-        populateMonthView(selected.getMonth());
+        Calendar.getInstance().setTime(new Date());
+        populateMonthView();
         loadDay();
         statusLabel.setText("All Good!");
         statusLabel.setTextFill(Color.GREEN);
@@ -66,6 +69,8 @@ public class MainController {
         test.address = "1321 wirt";
         test.start = new Date();
 
+        Date current = calendar.getTime();
+
         Calendar cal = Calendar.getInstance();
         cal.setTime(test.start);
         cal.add(Calendar.HOUR, 2);
@@ -74,16 +79,34 @@ public class MainController {
 
         test.save();
         drawAppointment(test);
+
+        calendar.setTime(current);
     }
 
     @FXML
-    void populateMonthView(int month){
+    void advanceMonth(){
+        calendar.add(Calendar.MONTH, 1);
+        populateMonthView();
+    }
+
+    @FXML
+    void retreatMonth(){
+        calendar.add(Calendar.MONTH, -1);
+        populateMonthView();
+    }
+
+    @FXML
+    void populateMonthView(){
+        //TODO: NOT DONE, not dynamic
         //Get number of days in the month (Modulo?)
         //Remove components from the monthView
         //populate the monthView with the number of days (each day is a button)
         //update monthYearLabel to reflect the month and year selected
+        monthView.getChildren().removeAll(monthView.getChildren());
+
         int row = 0;
-        for (int i = 0; i < 30; ++i){
+        int numDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        for (int i = 0; i < numDays; ++i){
             Button day = new Button();
             day.setBackground(Background.EMPTY);
             day.setText("" + (i + 1));
@@ -91,14 +114,25 @@ public class MainController {
                 System.out.println("Button clicked: " + day.getText());
                 day.requestFocus();
                 monthYearLabel.setText(day.getText() + " - " + monthYear);
+                calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.getText()));
             }));
             monthView.add(day, i % 7, row);
             if (i % 7 == 6){
                 row ++;
             }
         }
-        monthYear = "April - 2015";
+        monthYear = "" + getMonthForInt(calendar.get(Calendar.MONTH)) + " " + calendar.get(Calendar.YEAR);
         monthYearLabel.setText(monthYear);
+    }
+
+    String getMonthForInt(int num) {
+        String month = "wrong";
+        DateFormatSymbols dfs = new DateFormatSymbols();
+        String[] months = dfs.getMonths();
+        if (num >= 0 && num <= 11 ) {
+            month = months[num];
+        }
+        return month;
     }
 
     @FXML
@@ -107,9 +141,9 @@ public class MainController {
             return;
         }
 
-        int year = selected.getYear();
-        int month = selected.getMonth();
-        int day = selected.getDay();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         Calendar c = Calendar.getInstance();
         c.set(year, month, day, 0, 0);

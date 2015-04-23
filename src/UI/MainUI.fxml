@@ -45,8 +45,8 @@
           <RowConstraints maxHeight="129.0" minHeight="10.0" prefHeight="111.19235229492188" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" text="&gt;" textAlignment="CENTER" GridPane.columnIndex="2" />
-            <Button layoutX="256.0" layoutY="12.0" mnemonicParsing="false" text="&lt;" textAlignment="CENTER" GridPane.columnIndex="1" />
+            <Button mnemonicParsing="false" onAction="#advanceMonth" text="&gt;" textAlignment="CENTER" GridPane.columnIndex="2" />
+            <Button layoutX="256.0" layoutY="12.0" mnemonicParsing="false" onAction="#retreatMonth" text="&lt;" textAlignment="CENTER" GridPane.columnIndex="1" />
             <GridPane fx:id="monthView" GridPane.rowIndex="1">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
