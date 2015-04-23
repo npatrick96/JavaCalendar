@@ -15,10 +15,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import sun.util.resources.cldr.aa.CalendarData_aa_DJ;
 
 import java.text.DateFormatSymbols;
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -67,19 +69,20 @@ public class MainController {
         test.name = "Test";
         test.description = "This is a test";
         test.address = "1321 wirt";
-        test.start = new Date();
 
         Date current = calendar.getTime();
+        calendar.set(Calendar.HOUR_OF_DAY, 8);
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(test.start);
-        cal.add(Calendar.HOUR, 2);
+        test.start = calendar.getTime();
 
-        test.end = cal.getTime();
+        calendar.add(Calendar.HOUR_OF_DAY, 2);
+
+        test.end = calendar.getTime();
+
+        System.out.println("Start, end at creation " + test.start.getTime() + ", " + test.end.getTime());
 
         test.save();
         drawAppointment(test);
-
         calendar.setTime(current);
     }
 
@@ -115,6 +118,7 @@ public class MainController {
                 day.requestFocus();
                 monthYearLabel.setText(day.getText() + " - " + monthYear);
                 calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.getText()));
+                drawDayStructure();
             }));
             monthView.add(day, i % 7, row);
             if (i % 7 == 6){
@@ -137,45 +141,64 @@ public class MainController {
 
     @FXML
     void loadDay(){
-        if (selected == null){
-            return;
-        }
+        Date current = calendar.getTime();
 
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date dayStart = calendar.getTime();
 
-        Calendar c = Calendar.getInstance();
-        c.set(year, month, day, 0, 0);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        Date dayEnd = calendar.getTime();
 
-        Date dayStart = c.getTime(), nextDayStart;
-        c.add(Calendar.DATE, 1);
-        nextDayStart = c.getTime();
+        calendar.setTime(current);
 
-        String where = "time >= " + dayStart.getTime() + " AND time < " + nextDayStart.getTime();
-        QuerySet<Appointment> meetings = new Appointment().lazyAllWhere(where);
+        String where = "start >= " + dayStart.getTime() + " AND start < " + dayEnd.getTime();
+        ArrayList<Appointment> meetings = new Appointment().allWhere(where);
 
-        while (meetings.hasNext()){
-            drawAppointment(meetings.next());
+        for (Appointment appt: meetings){
+            drawAppointment(appt);
         }
     }
 
     void drawAppointment(Appointment appt){
         System.out.println("Drawing an appointment. Name = " + appt.name);
 
-        int startHour = appt.start.getHours();
-        int endHour = appt.end.getHours();
+        int startHour = getEventStart(appt);
+        int endHour = getEventEnd(appt);
+
+        System.out.println("Start, end: " + startHour + ", " + endHour);
 
         Button appointmentButton = new Button(appt.name + "\n" + appt.address);
         appointmentButton.setTranslateX(30);
-        appointmentButton.setTranslateY(scale * startHour);
-        appointmentButton.setMinWidth(getDayViewWidth()/2);
+        double offset = ((scale * 2 * startHour) - 1) + (calendar.get(Calendar.MINUTE) / 30);
+        appointmentButton.setTranslateY(offset);
+        appointmentButton.setMinWidth(getDayViewWidth() / 2);
 
-        double height = (endHour - startHour) > scale ? (endHour - startHour) : scale;
+        double height = ((endHour - startHour) * scale) > scale ? (endHour - startHour) * scale : scale;
         appointmentButton.setMinHeight(height);
         appointmentButton.setMaxHeight(height);
 
         addToCanvas(appointmentButton);
+    }
+
+    int getEventStart(Appointment appt){
+        Date current = calendar.getTime();
+
+        calendar.setTime(appt.start);
+        int hourstart = calendar.get(Calendar.HOUR_OF_DAY);
+        calendar.setTime(current);
+        return hourstart;
+    }
+
+    int getEventEnd(Appointment appt){
+        Date current = calendar.getTime();
+
+        calendar.setTime(appt.end);
+        int hourEnd = calendar.get(Calendar.HOUR_OF_DAY);
+        calendar.setTime(current);
+        return hourEnd;
     }
 
     void drawDayStructure(){
