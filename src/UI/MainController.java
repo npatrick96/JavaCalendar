@@ -16,6 +16,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -38,7 +40,7 @@ public class MainController {
     Date selected = new Date();
     Button selectedBtn;
     String monthYear;
-    int scale = 15;
+    int scale = 25;
 
     @FXML
     void initialize(){
@@ -56,7 +58,22 @@ public class MainController {
 
     @FXML
     void addEvent(){
-        System.out.println("Adding an event... but not really.");
+        //System.out.println("Adding an event... but not really.");
+
+        Appointment test = new Appointment();
+        test.name = "Test";
+        test.description = "This is a test";
+        test.address = "1321 wirt";
+        test.start = new Date();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(test.start);
+        cal.add(Calendar.HOUR, 2);
+
+        test.end = cal.getTime();
+
+        test.save();
+        drawAppointment(test);
     }
 
     @FXML
@@ -111,6 +128,20 @@ public class MainController {
 
     void drawAppointment(Appointment appt){
         System.out.println("Drawing an appointment. Name = " + appt.name);
+
+        int startHour = appt.start.getHours();
+        int endHour = appt.end.getHours();
+
+        Button appointmentButton = new Button(appt.name + "\n" + appt.address);
+        appointmentButton.setTranslateX(30);
+        appointmentButton.setTranslateY(scale * startHour);
+        appointmentButton.setMinWidth(getDayViewWidth()/2);
+
+        double height = (endHour - startHour) > scale ? (endHour - startHour) : scale;
+        appointmentButton.setMinHeight(height);
+        appointmentButton.setMaxHeight(height);
+
+        addToCanvas(appointmentButton);
     }
 
     void drawDayStructure(){

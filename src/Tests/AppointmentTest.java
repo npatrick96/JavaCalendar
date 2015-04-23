@@ -34,7 +34,7 @@ public class AppointmentTest {
             appt.address = "1321 Wirt Road";
             appt.description = "This was generated at " + i;
             appt.name = "" + i;
-            appt.time = new Date();
+            appt.start = new Date();
 
             appt.save();
         }

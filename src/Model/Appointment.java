@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class Appointment extends SQLRow {
     public String name, description, address;
-    public Date time;
+    public Date start, end;
 
     public Appointment(){
 
