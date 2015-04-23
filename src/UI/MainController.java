@@ -3,12 +3,18 @@ package UI;
 import Model.Appointment;
 import SQL.QuerySet;
 import javafx.fxml.FXML;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -26,10 +32,13 @@ public class MainController {
     Label monthYearLabel;
     @FXML
     Label statusLabel;
+    @FXML
+    Slider uiScale;
 
     Date selected = new Date();
     Button selectedBtn;
     String monthYear;
+    int scale = 10;
 
     @FXML
     void initialize(){
@@ -37,6 +46,12 @@ public class MainController {
         loadDay();
         statusLabel.setText("All Good!");
         statusLabel.setTextFill(Color.GREEN);
+        drawDayStructure();
+
+        uiScale.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            scale = newValue.intValue();
+            drawDayStructure();
+        }));
     }
 
     @FXML
@@ -71,6 +86,10 @@ public class MainController {
 
     @FXML
     void loadDay(){
+        if (selected == null){
+            return;
+        }
+
         int year = selected.getYear();
         int month = selected.getMonth();
         int day = selected.getDay();
@@ -90,7 +109,66 @@ public class MainController {
         }
     }
 
-    void drawAppointment(Appointment appot){
-        System.out.println("Drawing an appointment. Name = " + appot.name);
+    void drawAppointment(Appointment appt){
+        System.out.println("Drawing an appointment. Name = " + appt.name);
+    }
+
+    void drawDayStructure(){
+        int totalHeight = scale * 2 * 25;
+        setScrollableHeight(totalHeight);
+
+        Pane content = (Pane) dayView.getContent();
+        content.getChildren().removeAll(content.getChildren());
+
+        for (int i = 1; i < 24; ++i){
+            int y = i * 2 * scale;
+            setHourLine("" + i, y);
+            setHalfHourLine(y + scale);
+        }
+        setHourLine("24", 48 * scale);
+
+        loadDay();
+    }
+
+    void setScrollableHeight(int height){
+        Bounds newBounds = new BoundingBox(0, 0, dayView.getViewportBounds().getWidth(), height);
+        dayView.setViewportBounds(newBounds);
+        dayView.getContent().setScaleX(50);
+    }
+
+    double getDayViewWidth(){
+        return 293;
+    }
+
+    void setHourLine(String label, int y){
+        Line hourLine = new Line();
+        hourLine.setStartX(30);
+        hourLine.setStartY(y);
+        hourLine.setEndX(getDayViewWidth());
+        hourLine.setEndY(y);
+
+        hourLine.setStrokeWidth(1);
+
+        Label hour = new Label(label);
+        Bounds hourBounds = new BoundingBox(0, y, 30, 30);
+
+        addLine(hourLine);
+    }
+
+    void setHalfHourLine(int y){
+        Line hourLine = new Line();
+        hourLine.setStartX(30);
+        hourLine.setStartY(y);
+        hourLine.setEndX(getDayViewWidth() / 2);
+        hourLine.setEndY(y);
+
+        hourLine.setStrokeWidth(0.5);
+
+        addLine(hourLine);
+    }
+
+    void addLine(Line l){
+        Pane canvas = (Pane)dayView.getContent();
+        canvas.getChildren().addAll(l);
     }
 }

@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Line?>
+
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="579.0" prefWidth="293.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.MainController">
    <children>
       <MenuBar>
@@ -69,13 +73,28 @@
       </GridPane>
       <Line endX="200.0" startX="-100.0" strokeLineCap="ROUND" strokeMiterLimit="0.0" />
       <ScrollPane fx:id="dayView" prefHeight="370.0" prefWidth="293.0">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-        </content>
+         <content>
+            <Pane />
+         </content>
       </ScrollPane>
-      <Label fx:id="statusLabel" text="Status">
-         <padding>
-            <Insets bottom="2.0" left="2.0" top="2.0" />
-         </padding></Label>
+      <HBox>
+         <children>
+            <Label fx:id="statusLabel" text="Status">
+               <padding>
+                  <Insets bottom="2.0" left="2.0" top="2.0" />
+               </padding>
+            </Label>
+            <Label text="Day Scale">
+               <padding>
+                  <Insets bottom="2.0" left="30.0" top="2.0" />
+               </padding>
+            </Label>
+            <Slider fx:id="uiScale" blockIncrement="5.0" majorTickUnit="10.0" max="40.0" min="10.0" minorTickCount="5" showTickMarks="true" snapToTicks="true" value="10.0">
+               <padding>
+                  <Insets bottom="2.0" left="10.0" top="2.0" />
+               </padding>
+            </Slider>
+         </children>
+      </HBox>
    </children>
 </VBox>
