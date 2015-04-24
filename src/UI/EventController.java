@@ -74,7 +74,7 @@ public class EventController {
 	int getEndHour(){
 		String[] input = EndTime.getText().split(":");
 		if (input.length > 0){
-			return Integer.parseInt(input[0]);
+			return Integer.parseInt(input[0].replace(" ", ""));
 		}
 		//todo: Popup requesting a valid time
 		return 8;
@@ -83,7 +83,7 @@ public class EventController {
 	int getEndMinutes(){
 		String[] input = EndTime.getText().split(":");
 		if (input.length > 1){
-			return Integer.parseInt(input[1]);
+			return Integer.parseInt(input[1].replace(" ", ""));
 		}
 		//todo: Popup requesting a valid time
 		return 0;
