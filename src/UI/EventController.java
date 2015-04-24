@@ -52,7 +52,7 @@ public class EventController {
 		calendar.setTime(current);
 
 		Stage parent = (Stage) StartTime.getScene().getWindow();
-		parent.close();
+		parent.hide();
 	}
 	int getStartHour(){
 		String[] input = StartTime.getText().split(":");
