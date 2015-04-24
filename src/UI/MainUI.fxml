@@ -31,7 +31,7 @@
       </MenuBar>
       <ToolBar prefHeight="40.0" prefWidth="200.0">
         <items>
-          <Button mnemonicParsing="false" onAction="#addEvent" text="Add Event" />
+          <Button fx:id="addEvent" mnemonicParsing="false" onAction="#Joinpage" text="Add Event" />
         </items>
       </ToolBar>
       <GridPane alignment="CENTER" prefHeight="146.0" prefWidth="293.0">

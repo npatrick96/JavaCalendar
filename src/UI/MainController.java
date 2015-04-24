@@ -3,9 +3,12 @@ package UI;
 import Model.Appointment;
 import SQL.QuerySet;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -15,8 +18,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.stage.Stage;
 import sun.util.resources.cldr.aa.CalendarData_aa_DJ;
 
+import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -39,6 +44,8 @@ public class MainController {
     Label statusLabel;
     @FXML
     Slider uiScale;
+    @FXML
+    Button addEvent;
 
     Date selected = new Date();
     String monthYear;
@@ -261,4 +268,17 @@ public class MainController {
         Pane canvas = (Pane)dayView.getContent();
         canvas.getChildren().addAll(l);
     }
+    @FXML
+	private void Joinpage() throws IOException{
+		switchScreen("Event.fxml");
+	}
+	
+	private void switchScreen(String FXMLFile) throws IOException {
+		Parent home_page_parent = FXMLLoader.load(getClass().getResource(FXMLFile));
+		Scene home_page_scene = new Scene(home_page_parent);
+		Stage app_stage = (Stage) addEvent.getScene().getWindow();
+		app_stage.setScene(home_page_scene);
+		app_stage.show();
+	}
+    
 }
