@@ -175,13 +175,13 @@ public class MainController {
 
         Button appointmentButton = new Button(appt.name + "\n" + appt.address);
         appointmentButton.setTranslateX(30);
-        double offset = ((scale * 2 * startHour) - 1) + (calendar.get(Calendar.MINUTE) / 30);
+        double offset = ((scale * 2 * startHour) - 1) + ((calendar.get(Calendar.MINUTE) / 30));
         appointmentButton.setTranslateY(offset);
         appointmentButton.setMinWidth(getDayViewWidth() / 2);
+        appointmentButton.setTranslateX(50);
 
         double height = ((endHour - startHour) * scale) > scale ? (endHour - startHour) * scale : scale;
         appointmentButton.setMinHeight(height);
-        appointmentButton.setMaxHeight(height);
 
         addToCanvas(appointmentButton);
     }
@@ -264,26 +264,19 @@ public class MainController {
         Pane canvas = (Pane)dayView.getContent();
         canvas.getChildren().addAll(l);
     }
+
     @FXML
-	private void Joinpage() throws IOException{
+	private void Joinpage() throws IOException {
         Stage stage = new Stage();
 
-        Parent root = FXMLLoader.load(getClass().getResource("Event.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("EventAdd.fxml"));
         Scene scene = new Scene(root, 283, 330);
 
         stage.setTitle("Add a calendar event");
         stage.setScene(scene);
+        stage.setOnCloseRequest((event) -> {
+            drawDayStructure();
+        });
         stage.show();
-	}
-	
-	private void switchScreen(String FXMLFile) throws IOException {
-		Parent home_page_parent = FXMLLoader.load(getClass().getResource(FXMLFile));
-		Scene home_page_scene = new Scene(home_page_parent);
-		Stage app_stage = (Stage) addEvent.getScene().getWindow();
-		app_stage.setScene(home_page_scene);
-		app_stage.show();
-	}
-	
-	
-    
+    }
 }
