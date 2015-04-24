@@ -77,6 +77,14 @@ public class MainController {
     }
 
     @FXML
+    void today(){
+        Date today = new Date();
+        calendar.setTime(today);
+        populateMonthView();
+        drawDayStructure();
+    }
+
+    @FXML
     void retreatMonth(){
         calendar.add(Calendar.MONTH, -1);
         populateMonthView();
@@ -155,14 +163,18 @@ public class MainController {
         System.out.println("Start, end: " + startHour + ", " + endHour);
 
         Button appointmentButton = new Button(appt.name + "\n" + appt.address);
-        appointmentButton.setTranslateX(30);
+        appointmentButton.setTranslateX(getDayViewWidth() / 4);
+
         double offset = ((scale * 2 * startHour) - 1) + ((calendar.get(Calendar.MINUTE) / 30.0f) - scale);
+
         appointmentButton.setTranslateY(offset);
         appointmentButton.setMinWidth(getDayViewWidth() / 2);
-        appointmentButton.setTranslateX(50);
 
         double height = (endHour - startHour) >= 1 ? (endHour - startHour) * scale : scale;
 
+
+        //Use Pref Size is required to prevent the java UI Calculator from overriding the prefered value.
+        //This is only a problem for code-built nodes
         appointmentButton.setMinHeight(Control.USE_PREF_SIZE);
         appointmentButton.setPrefHeight(height * 2);
         appointmentButton.setMaxHeight(Control.USE_PREF_SIZE);
