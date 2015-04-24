@@ -51,7 +51,7 @@ public class MainController {
     Date selected = new Date();
     String monthYear;
     int scale = 25;
-
+    
     Calendar calendar = Calendar.getInstance();
 
     @FXML
@@ -61,11 +61,11 @@ public class MainController {
         loadDay();
         statusLabel.setText("All Good!");
         statusLabel.setTextFill(Color.GREEN);
-        drawDayStructure();
+        drawDayStructure(getSelectedColor());
 
         uiScale.valueProperty().addListener(((observable, oldValue, newValue) -> {
             scale = newValue.intValue();
-            drawDayStructure();
+            drawDayStructure(getSelectedColor());
         }));
     }
 
@@ -81,7 +81,7 @@ public class MainController {
         Date today = new Date();
         calendar.setTime(today);
         populateMonthView();
-        drawDayStructure();
+        drawDayStructure(getSelectedColor());
     }
 
     @FXML
@@ -110,7 +110,7 @@ public class MainController {
                 day.requestFocus();
                 monthYearLabel.setText(day.getText() + " - " + monthYear);
                 calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.getText()));
-                drawDayStructure();
+                drawDayStructure(getSelectedColor());
             }));
             monthView.add(day, i % 7, row);
             if (i % 7 == 6){
@@ -200,21 +200,21 @@ public class MainController {
         return hourEnd;
     }
 
-    void drawDayStructure(){
+    void drawDayStructure(Color color){
         int totalHeight = scale * 2 * 26;
         setScrollableHeight(totalHeight);
 
         Pane content = (Pane) dayView.getContent();
         content.getChildren().removeAll(content.getChildren());
-        setHalfHourLine(scale);
+        setHalfHourLine(scale, color);
         for (int i = 1; i < 24; ++i){
             int y = i * 2 * scale;
-            setHourLine("" + i, y);
-            setHalfHourLine(y + scale);
+            setHourLine("" + i, y, color);
+            setHalfHourLine(y + scale, color);
         }
-        setHourLine("24", 48 * scale);
+        setHourLine("24", 48 * scale, color);
 
-        setHalfHourLine(50 * scale);
+        setHalfHourLine(50 * scale, color);
 
         loadDay();
     }
@@ -228,12 +228,16 @@ public class MainController {
         return 293;
     }
 
-    void setHourLine(String label, int y){
+    void setHourLine(String label, int y, Color color){
+
         Line hourLine = new Line();
         hourLine.setStartX(30);
         hourLine.setStartY(y);
         hourLine.setEndX(getDayViewWidth());
         hourLine.setEndY(y);
+        //hourLine.fillProperty().set(getSelectedColor());
+        hourLine.setFill(getSelectedColor());
+        hourLine.setVisible(true);
 
         hourLine.setStrokeWidth(1);
 
@@ -244,12 +248,15 @@ public class MainController {
         addToCanvas(hour);
     }
 
-    void setHalfHourLine(int y){
+    void setHalfHourLine(int y, Color color){
         Line hourLine = new Line();
         hourLine.setStartX(0);
         hourLine.setStartY(y);
         hourLine.setEndX(getDayViewWidth() / 2);
         hourLine.setEndY(y);
+        //hourLine.fillProperty().set(getSelectedColor());
+        hourLine.setFill(getSelectedColor());
+        hourLine.setVisible(true);
 
         hourLine.setStrokeWidth(0.5);
 
@@ -271,18 +278,21 @@ public class MainController {
         stage.setTitle("Add a calendar event");
         stage.setScene(scene);
         stage.setOnCloseRequest((event) -> {
-            drawDayStructure();
+            drawDayStructure(getSelectedColor());
         });
         stage.show();
 
 	}
     
     @FXML
+    private void setColor(){
+    	Color setColor = getSelectedColor();
+    	System.out.println(setColor);
+    	drawDayStructure(setColor);
+    }
     private Color getSelectedColor(){
     	Color selectedColor = colorPicker.getValue();
-    	System.out.println(selectedColor);
-    	return selectedColor;
-    	 
+    	return selectedColor;	 
     }
 	
 	private void switchScreen(String FXMLFile) throws IOException {
