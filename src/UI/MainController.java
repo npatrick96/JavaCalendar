@@ -9,7 +9,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Background;
@@ -42,6 +44,8 @@ public class MainController {
     Slider uiScale;
     @FXML
     Button addEvent;
+    @FXML 
+    ColorPicker colorPicker;
 
     Date selected = new Date();
     String monthYear;
@@ -276,6 +280,14 @@ public class MainController {
         stage.setScene(scene);
         stage.show();
 	}
+    
+    @FXML
+    private Color getSelectedColor(){
+    	Color selectedColor = colorPicker.getValue();
+    	System.out.println(selectedColor);
+    	return selectedColor;
+    	 
+    }
 	
 	private void switchScreen(String FXMLFile) throws IOException {
 		Parent home_page_parent = FXMLLoader.load(getClass().getResource(FXMLFile));

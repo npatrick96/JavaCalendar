@@ -32,6 +32,7 @@
       <ToolBar prefHeight="40.0" prefWidth="200.0">
         <items>
           <Button fx:id="addEvent" mnemonicParsing="false" onAction="#Joinpage" text="Add Event" />
+            <ColorPicker fx:id="colorPicker" onAction="#getSelectedColor" promptText="Pick a Color" />
         </items>
       </ToolBar>
       <GridPane alignment="CENTER" prefHeight="146.0" prefWidth="293.0">
