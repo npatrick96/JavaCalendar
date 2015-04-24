@@ -269,8 +269,8 @@ public class MainController {
 	private void Joinpage() throws IOException{
         Stage stage = new Stage();
 
-        Parent root = FXMLLoader.load(getClass().getResource("Event.fxml"));
-        Scene scene = new Scene(root, 321, 423);
+        Parent root = FXMLLoader.load(getClass().getResource("EventAdd.fxml"));
+        Scene scene = new Scene(root, 283, 330);
 
         stage.setTitle("Add a calendar event");
         stage.setScene(scene);

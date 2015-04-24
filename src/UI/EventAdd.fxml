@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox>
+         <children>
+            <Label text="Name">
+               <padding>
+                  <Insets left="5.0" right="10.0" top="5.0" />
+               </padding>
+            </Label>
+            <TextField translateX="33.0" />
+         </children>
+      </HBox>
+      <HBox layoutX="10.0" layoutY="10.0">
+         <children>
+            <Label text="Location">
+               <padding>
+                  <Insets left="5.0" right="10.0" top="5.0" />
+               </padding>
+            </Label>
+            <TextField text=" " translateX="16.0" />
+         </children>
+      </HBox>
+      <HBox layoutX="10.0" layoutY="62.0">
+         <children>
+            <Label text="Start Time">
+               <padding>
+                  <Insets left="5.0" right="10.0" top="5.0" />
+               </padding>
+            </Label>
+            <TextField text="8:00" translateX="7.0" />
+         </children>
+      </HBox>
+      <HBox layoutX="10.0" layoutY="262.0">
+         <children>
+            <Label text="End Time">
+               <padding>
+                  <Insets left="5.0" right="10.0" top="5.0" />
+               </padding>
+            </Label>
+            <TextField text="10:00 " translateX="12.0" />
+         </children>
+      </HBox>
+      <HBox layoutX="10.0" layoutY="36.0">
+         <children>
+            <Label text="Description">
+               <padding>
+                  <Insets left="5.0" right="10.0" top="5.0" />
+               </padding>
+            </Label>
+            <TextArea prefHeight="200.0" prefWidth="200.0" />
+         </children>
+      </HBox>
+      <Button mnemonicParsing="false" text="Submit" />
+   </children>
+</VBox>
