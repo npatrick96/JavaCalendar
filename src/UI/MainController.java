@@ -8,13 +8,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -108,17 +102,25 @@ public class MainController {
             day.setOnMouseClicked((event -> {
                 System.out.println("Button clicked: " + day.getText());
                 day.requestFocus();
-                monthYearLabel.setText(day.getText() + " - " + monthYear);
+
                 calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.getText()));
                 drawDayStructure(getSelectedColor());
+
+                String month = getMonthForInt(calendar.get(Calendar.MONTH));
+                String year = "" + calendar.get(Calendar.YEAR);
+                String d = "" + calendar.get(Calendar.DAY_OF_MONTH);
+                monthYearLabel.setText(month + " " + d + ", " + year);
             }));
             monthView.add(day, i % 7, row);
             if (i % 7 == 6){
                 row ++;
             }
         }
-        monthYear = "" + getMonthForInt(calendar.get(Calendar.MONTH)) + " " + calendar.get(Calendar.YEAR);
-        monthYearLabel.setText(monthYear);
+
+        String month = getMonthForInt(calendar.get(Calendar.MONTH));
+        String year = "" + calendar.get(Calendar.YEAR);
+        String day = "" + calendar.get(Calendar.DAY_OF_MONTH);
+        monthYearLabel.setText(month + " " + day + ", " + year);
     }
 
     String getMonthForInt(int num) {
