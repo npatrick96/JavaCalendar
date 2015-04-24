@@ -264,7 +264,6 @@ public class MainController {
         Pane canvas = (Pane)dayView.getContent();
         canvas.getChildren().addAll(l);
     }
-
     @FXML
 	private void Joinpage() throws IOException{
         Stage stage = new Stage();
@@ -284,5 +283,7 @@ public class MainController {
 		app_stage.setScene(home_page_scene);
 		app_stage.show();
 	}
+	
+	
     
 }
