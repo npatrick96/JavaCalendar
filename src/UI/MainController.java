@@ -8,10 +8,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -175,13 +172,16 @@ public class MainController {
 
         Button appointmentButton = new Button(appt.name + "\n" + appt.address);
         appointmentButton.setTranslateX(30);
-        double offset = ((scale * 2 * startHour) - 1) + ((calendar.get(Calendar.MINUTE) / 30));
+        double offset = ((scale * 2 * startHour) - 1) + ((calendar.get(Calendar.MINUTE) / 30.0f) - scale);
         appointmentButton.setTranslateY(offset);
         appointmentButton.setMinWidth(getDayViewWidth() / 2);
         appointmentButton.setTranslateX(50);
 
-        double height = ((endHour - startHour) * scale) > scale ? (endHour - startHour) * scale : scale;
-        appointmentButton.setMinHeight(height);
+        double height = (endHour - startHour) >= 1 ? (endHour - startHour) * scale : scale;
+
+        appointmentButton.setMinHeight(Control.USE_PREF_SIZE);
+        appointmentButton.setPrefHeight(height * 2);
+        appointmentButton.setMaxHeight(Control.USE_PREF_SIZE);
 
         addToCanvas(appointmentButton);
     }
