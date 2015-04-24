@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Line?>
+
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="579.0" prefWidth="293.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.MainController">
    <children>
       <MenuBar>
@@ -29,6 +33,7 @@
         <items>
           <Button fx:id="addEvent" mnemonicParsing="false" onAction="#Joinpage" text="Add Event" />
             <Button fx:id="addEvent1" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#today" text="Today" />
+            <ColorPicker fx:id="colorPicker" onAction="#getSelectedColor" />
         </items>
       </ToolBar>
       <GridPane alignment="CENTER" prefHeight="146.0" prefWidth="293.0">
