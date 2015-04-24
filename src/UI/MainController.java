@@ -1,7 +1,6 @@
 package UI;
 
 import Model.Appointment;
-import SQL.QuerySet;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.BoundingBox;
@@ -19,12 +18,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
-import sun.util.resources.cldr.aa.CalendarData_aa_DJ;
 
 import java.io.IOException;
 import java.text.DateFormatSymbols;
-import java.time.DateTimeException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -268,9 +264,17 @@ public class MainController {
         Pane canvas = (Pane)dayView.getContent();
         canvas.getChildren().addAll(l);
     }
+
     @FXML
 	private void Joinpage() throws IOException{
-		switchScreen("Event.fxml");
+        Stage stage = new Stage();
+
+        Parent root = FXMLLoader.load(getClass().getResource("Event.fxml"));
+        Scene scene = new Scene(root, 321, 423);
+
+        stage.setTitle("Add a calendar event");
+        stage.setScene(scene);
+        stage.show();
 	}
 	
 	private void switchScreen(String FXMLFile) throws IOException {
