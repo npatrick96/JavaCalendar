@@ -8,12 +8,16 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+<<<<<<< HEAD
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
+=======
+import javafx.scene.control.*;
+>>>>>>> branch 'master' of https://github.com/cd24/JavaCalendar
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -68,30 +72,6 @@ public class MainController {
         }));
     }
 
-    @FXML
-    void addEvent(){
-        //System.out.println("Adding an event... but not really.");
-
-        Appointment test = new Appointment();
-        test.name = "Test";
-        test.description = "This is a test";
-        test.address = "1321 wirt";
-
-        Date current = calendar.getTime();
-        calendar.set(Calendar.HOUR_OF_DAY, 8);
-
-        test.start = calendar.getTime();
-
-        calendar.add(Calendar.HOUR_OF_DAY, 2);
-
-        test.end = calendar.getTime();
-
-        System.out.println("Start, end at creation " + test.start.getTime() + ", " + test.end.getTime());
-
-        test.save();
-        drawAppointment(test);
-        calendar.setTime(current);
-    }
 
     @FXML
     void advanceMonth(){
@@ -179,13 +159,16 @@ public class MainController {
 
         Button appointmentButton = new Button(appt.name + "\n" + appt.address);
         appointmentButton.setTranslateX(30);
-        double offset = ((scale * 2 * startHour) - 1) + (calendar.get(Calendar.MINUTE) / 30);
+        double offset = ((scale * 2 * startHour) - 1) + ((calendar.get(Calendar.MINUTE) / 30.0f) - scale);
         appointmentButton.setTranslateY(offset);
         appointmentButton.setMinWidth(getDayViewWidth() / 2);
+        appointmentButton.setTranslateX(50);
 
-        double height = ((endHour - startHour) * scale) > scale ? (endHour - startHour) * scale : scale;
-        appointmentButton.setMinHeight(height);
-        appointmentButton.setMaxHeight(height);
+        double height = (endHour - startHour) >= 1 ? (endHour - startHour) * scale : scale;
+
+        appointmentButton.setMinHeight(Control.USE_PREF_SIZE);
+        appointmentButton.setPrefHeight(height * 2);
+        appointmentButton.setMaxHeight(Control.USE_PREF_SIZE);
 
         addToCanvas(appointmentButton);
     }
@@ -270,15 +253,19 @@ public class MainController {
     }
 
     @FXML
-	private void Joinpage() throws IOException{
+	private void Joinpage() throws IOException {
         Stage stage = new Stage();
 
-        Parent root = FXMLLoader.load(getClass().getResource("Event.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("EventAdd.fxml"));
         Scene scene = new Scene(root, 283, 330);
 
         stage.setTitle("Add a calendar event");
         stage.setScene(scene);
+        stage.setOnCloseRequest((event) -> {
+            drawDayStructure();
+        });
         stage.show();
+
 	}
     
     @FXML
@@ -296,5 +283,5 @@ public class MainController {
 		app_stage.setScene(home_page_scene);
 		app_stage.show();
 	}
-    
+
 }
