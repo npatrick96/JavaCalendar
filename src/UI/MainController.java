@@ -61,30 +61,6 @@ public class MainController {
         }));
     }
 
-    @FXML
-    void addEvent(){
-        //System.out.println("Adding an event... but not really.");
-
-        Appointment test = new Appointment();
-        test.name = "Test";
-        test.description = "This is a test";
-        test.address = "1321 wirt";
-
-        Date current = calendar.getTime();
-        calendar.set(Calendar.HOUR_OF_DAY, 8);
-
-        test.start = calendar.getTime();
-
-        calendar.add(Calendar.HOUR_OF_DAY, 2);
-
-        test.end = calendar.getTime();
-
-        System.out.println("Start, end at creation " + test.start.getTime() + ", " + test.end.getTime());
-
-        test.save();
-        drawAppointment(test);
-        calendar.setTime(current);
-    }
 
     @FXML
     void advanceMonth(){
