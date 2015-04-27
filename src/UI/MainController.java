@@ -290,6 +290,7 @@ public class MainController {
     	System.out.println(setColor);
     	drawDayStructure(setColor);
     }
+    
     Color getSelectedColor(){
     	Color selectedColor = colorPicker.getValue();
     	return selectedColor;	 
