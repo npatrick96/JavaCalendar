@@ -55,6 +55,7 @@ public class MainController {
         loadDay();
         statusLabel.setText("All Good!");
         statusLabel.setTextFill(Color.GREEN);
+        colorPicker.setValue(Color.BLACK);
         drawDayStructure(getSelectedColor());
 
         uiScale.valueProperty().addListener(((observable, oldValue, newValue) -> {
@@ -180,7 +181,7 @@ public class MainController {
         appointmentButton.setMinHeight(Control.USE_PREF_SIZE);
         appointmentButton.setPrefHeight(height * 2);
         appointmentButton.setMaxHeight(Control.USE_PREF_SIZE);
-
+        appointmentButton.setTextFill(getSelectedColor());
         addToCanvas(appointmentButton);
     }
 
@@ -237,11 +238,9 @@ public class MainController {
         hourLine.setStartY(y);
         hourLine.setEndX(getDayViewWidth());
         hourLine.setEndY(y);
-        //hourLine.fillProperty().set(getSelectedColor());
-        hourLine.setFill(getSelectedColor());
-        hourLine.setVisible(true);
 
         hourLine.setStrokeWidth(1);
+        hourLine.setStroke(getSelectedColor());
 
         Label hour = new Label(label);
         hour.setTranslateY(y - scale);
@@ -256,13 +255,12 @@ public class MainController {
         hourLine.setStartY(y);
         hourLine.setEndX(getDayViewWidth() / 2);
         hourLine.setEndY(y);
-        //hourLine.fillProperty().set(getSelectedColor());
-        hourLine.setFill(getSelectedColor());
-        hourLine.setVisible(true);
-
+        
+        hourLine.setStroke(getSelectedColor().brighter());
         hourLine.setStrokeWidth(0.5);
 
         addToCanvas(hourLine);
+        hourLine.setVisible(true);
     }
 
     void addToCanvas(Node l){
@@ -287,12 +285,12 @@ public class MainController {
 	}
     
     @FXML
-    private void setColor(){
+    void setColor(){
     	Color setColor = getSelectedColor();
     	System.out.println(setColor);
     	drawDayStructure(setColor);
     }
-    private Color getSelectedColor(){
+    Color getSelectedColor(){
     	Color selectedColor = colorPicker.getValue();
     	return selectedColor;	 
     }

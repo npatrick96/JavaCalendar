@@ -33,7 +33,7 @@
         <items>
           <Button fx:id="addEvent" mnemonicParsing="false" onAction="#Joinpage" text="Add Event" />
             <Button fx:id="addEvent1" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#today" text="Today" />
-            <ColorPicker fx:id="colorPicker" editable="true" onAction="#setColor" />
+            <ColorPicker fx:id="colorPicker" onAction="#setColor" />
         </items>
       </ToolBar>
       <GridPane alignment="CENTER" prefHeight="146.0" prefWidth="293.0">
