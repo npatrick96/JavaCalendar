@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
-
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.EventController">
    <children>
       <TextField fx:id="Event" layoutX="139.0" layoutY="14.0" />
@@ -15,7 +12,7 @@
       <Label layoutX="71.0" layoutY="60.0" text="Start Time" />
       <Label layoutX="75.0" layoutY="143.0" text="Location" />
       <Label layoutX="84.0" layoutY="211.0" text="Notes" />
-      <Button fx:id="Confirm" layoutX="249.0" layoutY="397.0" mnemonicParsing="false" onAction="#Save" text="Confirm" />
+      <Button fx:id="Confirm" layoutX="249.0" layoutY="397.0" mnemonicParsing="false" onAction="#CloseWindow" text="Confirm" />
       <Label layoutX="73.0" layoutY="101.0" text="End Time" />
       <TextField fx:id="EndTime" layoutX="139.0" layoutY="96.0" />
    </children>

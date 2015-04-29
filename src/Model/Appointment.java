@@ -39,4 +39,18 @@ public class Appointment extends SQLRow {
 
         return meetings;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj.getClass() != Appointment.class){
+            return false;
+        }
+        Appointment that = (Appointment) obj;
+
+        return this.name == that.name &&
+                this.description == that.description &&
+                this.address == that.address &&
+                this.start == that.start &&
+                this.end == that.end;
+    }
 }

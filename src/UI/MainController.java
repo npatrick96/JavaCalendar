@@ -49,11 +49,12 @@ public class MainController {
     @FXML
     void initialize(){
         Calendar.getInstance().setTime(new Date());
-        populateMonthView();
-        loadDay();
+
         statusLabel.setText("All Good!");
         statusLabel.setTextFill(Color.GREEN);
         colorPicker.setValue(Color.BLACK);
+
+        populateMonthView();
         drawDayStructure();
 
         uiScale.valueProperty().addListener(((observable, oldValue, newValue) -> {
@@ -61,7 +62,7 @@ public class MainController {
             drawDayStructure();
         }));
 
-        calendar.setTime(new Date());
+        Calendar.getInstance().setTime(new Date());
     }
 
 
@@ -90,9 +91,9 @@ public class MainController {
         monthView.getChildren().removeAll(monthView.getChildren());
         Date current = calendar.getTime();
 
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
         int row = 0,
             numDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
 
         for (int i = 0; i < numDays; ++i){
 
@@ -106,9 +107,9 @@ public class MainController {
 
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
-        setMonthText();
 
         calendar.setTime(current);
+        setMonthText();
     }
 
     void setMonthText(){
@@ -128,13 +129,14 @@ public class MainController {
         day.setText("" + calendar.get(Calendar.DAY_OF_MONTH
         ));
         day.setOnMouseClicked((event -> {
-
             calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.getText()));
 
             drawDayStructure();
             setMonthText();
 
         }));
+
+        calendar.setTime(curr);
 
         return day;
     }
@@ -173,6 +175,14 @@ public class MainController {
                 e.printStackTrace();
             }
         });
+
+        Color background = getContrastColor(getSelectedColor());
+        String asString = background.toString();
+        String mainAsString = getSelectedColor().toString();
+        String backgroundAsHex = "#" + asString.substring(2, asString.length());
+        String foreGroundAsText = "#" + mainAsString.substring(2, mainAsString.length());
+
+        appointmentButton.setStyle("-fx-background-color: " + backgroundAsHex + "; -fx-border-color: " + foreGroundAsText + ";");
 
         double offset = ((scale * 2 * startHour) - 1) + ((calendar.get(Calendar.MINUTE) / 30.0f) - scale);
 
@@ -274,22 +284,6 @@ public class MainController {
         canvas.getChildren().addAll(l);
     }
 
-    @FXML
-	private void Joinpage() throws IOException {
-        Stage stage = new Stage();
-
-        Parent root = FXMLLoader.load(getClass().getResource("EventAdd.fxml"));
-        Scene scene = new Scene(root, 283, 330);
-
-        stage.setTitle("Add a calendar event");
-        stage.setScene(scene);
-        stage.setOnHiding((event) -> {
-            drawDayStructure();
-        });
-        stage.show();
-
-	}
-
     void editAppointment(Appointment appt) throws IOException {
         Stage stage = new Stage();
 
@@ -301,6 +295,21 @@ public class MainController {
         controller.loadFromAppointment(appt);
 
         stage.setTitle("Editing event: " + appt.name);
+        stage.setScene(scene);
+        stage.setOnHiding((event) -> {
+            drawDayStructure();
+        });
+        stage.show();
+    }
+
+    @FXML
+    void addEvent() throws IOException {
+        Stage stage = new Stage();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("EventAdd.fxml"));
+        Parent root = (Parent) loader.load();
+        Scene scene = new Scene(root, 283, 330);
+
         stage.setScene(scene);
         stage.setOnHiding((event) -> {
             drawDayStructure();
@@ -325,5 +334,10 @@ public class MainController {
 		app_stage.setScene(home_page_scene);
 		app_stage.show();
 	}
+
+    public static Color getContrastColor(Color color) {
+        double y = (299 * color.getRed() + 587 * color.getGreen() + 114 * color.getBlue()) / 1000;
+        return y >= 128 ? color.BLACK : color.WHITE;
+    }
 
 }

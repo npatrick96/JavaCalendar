@@ -34,6 +34,37 @@ public class EventController {
 
 	public Appointment current;
 
+	@FXML
+	void CloseWindow(){
+		getFromView();
+		current.save();
+
+		Stage parent = (Stage) StartTime.getScene().getWindow();
+		parent.hide();
+	}
+
+	void getFromView(){
+		if (current == null){
+			current = new Appointment();
+		}
+
+		current.name = Event.getText();
+		current.description = Notes.getText();
+		current.address = Location.getText();
+
+
+		Calendar calendar = Calendar.getInstance();
+		Date now = calendar.getTime();
+
+		Instant selected = date.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+		Date day = Date.from(selected);
+
+		current.start = hourStringToDate(StartTime.getText(), day);
+		current.end = hourStringToDate(EndTime.getText(), day);
+
+		calendar.setTime(now);
+	}
+
 	public void initialize(){
 		Date currentTime = Calendar.getInstance().getTime();
 		ZonedDateTime selected = currentTime.toInstant().atZone(ZoneId.systemDefault());
@@ -89,77 +120,6 @@ public class EventController {
 		return hourString;
 	}
 
-	@FXML
-	void Save(){
-		Appointment test = new Appointment();
-		test.name = Event.getText();
-		test.description = Notes.getText();
-		test.address = Location.getText();
-
-
-		Calendar calendar = Calendar.getInstance();
-
-		Date current = calendar.getTime();
-
-		Instant selected = date.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
-		Date day = Date.from(selected);
-
-		test.start = hourStringToDate(StartTime.getText(), day);
-		test.end = hourStringToDate(EndTime.getText(), day);
-
-		/*
-		calendar.set(Calendar.HOUR_OF_DAY, getStartHour());
-		calendar.set(Calendar.MINUTE, getStartMinutes());
-
-		test.start = calendar.getTime();
-
-		calendar.set(Calendar.HOUR_OF_DAY, getEndHour());
-		calendar.set(Calendar.MINUTE, getEndMinutes());
-
-		test.end = calendar.getTime();
-		*/
-
-		test.save();
-		calendar.setTime(current);
-
-		Stage parent = (Stage) StartTime.getScene().getWindow();
-		parent.hide();
-	}
-
-	int getStartHour(){
-		String[] input = StartTime.getText().split(":");
-		if (input.length > 0){
-			return Integer.parseInt(input[0]);
-		}
-		//todo: Popup requesting a valid time
-		return 8;
-	}
-
-	int getStartMinutes(){
-		String[] input = StartTime.getText().split(":");
-		if (input.length > 1){
-			return Integer.parseInt(input[1]);
-		}
-		//todo: Popup requesting a valid time
-		return 0;
-	}
-	int getEndHour(){
-		String[] input = EndTime.getText().split(":");
-		if (input.length > 0){
-			return Integer.parseInt(input[0].replace(" ", ""));
-		}
-		//todo: Popup requesting a valid time
-		return 8;
-	}
-
-	int getEndMinutes(){
-		String[] input = EndTime.getText().split(":");
-		if (input.length > 1){
-			return Integer.parseInt(input[1].replace(" ", ""));
-		}
-		//todo: Popup requesting a valid time
-		return 0;
-	}
 
 
 }
