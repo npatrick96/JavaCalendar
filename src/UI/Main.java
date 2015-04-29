@@ -31,6 +31,7 @@ public class Main extends Application{
         Image icon128 = new Image(getClass().getResourceAsStream("calendar128.png"));
         Image icon256 = new Image(getClass().getResourceAsStream("calendar256.png"));
         Image icon512 = new Image(getClass().getResourceAsStream("calendar512.png"));
+
         stage.getIcons().addAll(icon, icon16, icon24, icon32, icon48, icon64, icon128, icon256, icon512);
 
         stage.setTitle("A Java Calandar Appp");

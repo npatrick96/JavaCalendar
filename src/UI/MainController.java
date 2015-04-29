@@ -42,8 +42,6 @@ public class MainController {
     @FXML 
     ColorPicker colorPicker;
 
-    Date selected = new Date();
-    String monthYear;
     int scale = 25;
     
     Calendar calendar = Calendar.getInstance();
@@ -56,18 +54,20 @@ public class MainController {
         statusLabel.setText("All Good!");
         statusLabel.setTextFill(Color.GREEN);
         colorPicker.setValue(Color.BLACK);
-        drawDayStructure(getSelectedColor());
+        drawDayStructure();
 
         uiScale.valueProperty().addListener(((observable, oldValue, newValue) -> {
             scale = newValue.intValue();
-            drawDayStructure(getSelectedColor());
+            drawDayStructure();
         }));
+
+        calendar.setTime(new Date());
     }
 
 
     @FXML
     void advanceMonth(){
-        calendar.add(Calendar.MONTH, 1);
+        calendar.roll(Calendar.MONTH, true);
         populateMonthView();
     }
 
@@ -76,52 +76,67 @@ public class MainController {
         Date today = new Date();
         calendar.setTime(today);
         populateMonthView();
-        drawDayStructure(getSelectedColor());
+        drawDayStructure();
     }
 
     @FXML
     void retreatMonth(){
-        calendar.add(Calendar.MONTH, -1);
+        calendar.roll(Calendar.MONTH, false);
         populateMonthView();
     }
 
     @FXML
     void populateMonthView(){
-        //TODO: NOT DONE, not dynamic
-        //Get number of days in the month (Modulo?)
-        //Remove components from the monthView
-        //populate the monthView with the number of days (each day is a button)
-        //update monthYearLabel to reflect the month and year selected
         monthView.getChildren().removeAll(monthView.getChildren());
+        Date current = calendar.getTime();
 
-        int row = 0;
-        int numDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int row = 0,
+            numDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+
         for (int i = 0; i < numDays; ++i){
-            Button day = new Button();
-            day.setBackground(Background.EMPTY);
-            day.setText("" + (i + 1));
-            day.setOnMouseClicked((event -> {
-                System.out.println("Button clicked: " + day.getText());
-                day.requestFocus();
 
-                calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.getText()));
-                drawDayStructure(getSelectedColor());
+            Button day = getMonthButton(calendar.getTime());
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+            monthView.add(day, dayOfWeek - 1, row);
 
-                String month = getMonthForInt(calendar.get(Calendar.MONTH));
-                String year = "" + calendar.get(Calendar.YEAR);
-                String d = "" + calendar.get(Calendar.DAY_OF_MONTH);
-                monthYearLabel.setText(month + " " + d + ", " + year);
-            }));
-            monthView.add(day, i % 7, row);
-            if (i % 7 == 6){
+            if (dayOfWeek == Calendar.SATURDAY){
                 row ++;
             }
-        }
 
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        setMonthText();
+
+        calendar.setTime(current);
+    }
+
+    void setMonthText(){
         String month = getMonthForInt(calendar.get(Calendar.MONTH));
         String year = "" + calendar.get(Calendar.YEAR);
         String day = "" + calendar.get(Calendar.DAY_OF_MONTH);
         monthYearLabel.setText(month + " " + day + ", " + year);
+    }
+
+    Button getMonthButton(Date time){
+
+        Date curr = calendar.getTime();
+        calendar.setTime(time);
+
+        Button day = new Button();
+        day.setBackground(Background.EMPTY);
+        day.setText("" + calendar.get(Calendar.DAY_OF_MONTH
+        ));
+        day.setOnMouseClicked((event -> {
+
+            calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.getText()));
+
+            drawDayStructure();
+            setMonthText();
+
+        }));
+
+        return day;
     }
 
     String getMonthForInt(int num) {
@@ -136,21 +151,8 @@ public class MainController {
 
     @FXML
     void loadDay(){
-        Date current = calendar.getTime();
-
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        Date dayStart = calendar.getTime();
-
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-        Date dayEnd = calendar.getTime();
-
-        calendar.setTime(current);
-
-        String where = "start >= " + dayStart.getTime() + " AND start < " + dayEnd.getTime();
-        ArrayList<Appointment> meetings = new Appointment().allWhere(where);
+        Date today = calendar.getTime();
+        ArrayList<Appointment> meetings = Appointment.getAppointments(today);
 
         for (Appointment appt: meetings){
             drawAppointment(appt);
@@ -158,15 +160,19 @@ public class MainController {
     }
 
     void drawAppointment(Appointment appt){
-        System.out.println("Drawing an appointment. Name = " + appt.name);
 
         int startHour = getEventStart(appt);
         int endHour = getEventEnd(appt);
 
-        System.out.println("Start, end: " + startHour + ", " + endHour);
-
         Button appointmentButton = new Button(appt.name + "\n" + appt.address);
         appointmentButton.setTranslateX(getDayViewWidth() / 4);
+        appointmentButton.setOnAction((event) -> {
+            try {
+                editAppointment(appt);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         double offset = ((scale * 2 * startHour) - 1) + ((calendar.get(Calendar.MINUTE) / 30.0f) - scale);
 
@@ -181,6 +187,7 @@ public class MainController {
         appointmentButton.setMinHeight(Control.USE_PREF_SIZE);
         appointmentButton.setPrefHeight(height * 2);
         appointmentButton.setMaxHeight(Control.USE_PREF_SIZE);
+
         appointmentButton.setTextFill(getSelectedColor());
         addToCanvas(appointmentButton);
     }
@@ -203,21 +210,21 @@ public class MainController {
         return hourEnd;
     }
 
-    void drawDayStructure(Color color){
+    void drawDayStructure(){
         int totalHeight = scale * 2 * 26;
         setScrollableHeight(totalHeight);
 
         Pane content = (Pane) dayView.getContent();
         content.getChildren().removeAll(content.getChildren());
-        setHalfHourLine(scale, color);
+        setHalfHourLine(scale);
+
         for (int i = 1; i < 24; ++i){
             int y = i * 2 * scale;
-            setHourLine("" + i, y, color);
-            setHalfHourLine(y + scale, color);
+            setHourLine("" + i, y);
+            setHalfHourLine(y + scale);
         }
-        setHourLine("24", 48 * scale, color);
-
-        setHalfHourLine(50 * scale, color);
+        setHourLine("24", 48 * scale);
+        setHalfHourLine(50 * scale);
 
         loadDay();
     }
@@ -228,11 +235,10 @@ public class MainController {
     }
 
     double getDayViewWidth(){
-        return 293;
+        return 290;
     }
 
-    void setHourLine(String label, int y, Color color){
-
+    void setHourLine(String label, int y){
         Line hourLine = new Line();
         hourLine.setStartX(30);
         hourLine.setStartY(y);
@@ -249,7 +255,7 @@ public class MainController {
         addToCanvas(hour);
     }
 
-    void setHalfHourLine(int y, Color color){
+    void setHalfHourLine(int y){
         Line hourLine = new Line();
         hourLine.setStartX(0);
         hourLine.setStartY(y);
@@ -277,18 +283,34 @@ public class MainController {
 
         stage.setTitle("Add a calendar event");
         stage.setScene(scene);
-        stage.setOnCloseRequest((event) -> {
-            drawDayStructure(getSelectedColor());
+        stage.setOnHiding((event) -> {
+            drawDayStructure();
         });
         stage.show();
 
 	}
+
+    void editAppointment(Appointment appt) throws IOException {
+        Stage stage = new Stage();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("EventAdd.fxml"));
+        Parent root = (Parent) loader.load();
+        Scene scene = new Scene(root, 283, 330);
+
+        EventController controller = (EventController) loader.getController();
+        controller.loadFromAppointment(appt);
+
+        stage.setTitle("Editing event: " + appt.name);
+        stage.setScene(scene);
+        stage.setOnHiding((event) -> {
+            drawDayStructure();
+        });
+        stage.show();
+    }
     
     @FXML
     void setColor(){
-    	Color setColor = getSelectedColor();
-    	System.out.println(setColor);
-    	drawDayStructure(setColor);
+    	drawDayStructure();
     }
     
     Color getSelectedColor(){

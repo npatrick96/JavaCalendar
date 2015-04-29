@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.EventController">
    <children>
       <HBox>
@@ -12,7 +14,7 @@
                   <Insets left="5.0" right="10.0" top="5.0" />
                </padding>
             </Label>
-            <TextField fx:id="Event" translateX="33.0" />
+            <TextField fx:id="Event" translateX="29.0" />
          </children>
       </HBox>
       <HBox layoutX="10.0" layoutY="10.0">
@@ -22,7 +24,17 @@
                   <Insets left="5.0" right="10.0" top="5.0" />
                </padding>
             </Label>
-            <TextField fx:id="Location" text=" " translateX="16.0" />
+            <TextField fx:id="Location" text=" " translateX="15.0" />
+         </children>
+      </HBox>
+      <HBox layoutX="10.0" layoutY="10.0">
+         <children>
+            <Label text="Date">
+               <padding>
+                  <Insets left="5.0" right="10.0" top="5.0" />
+               </padding>
+            </Label>
+            <DatePicker fx:id="date" translateX="36.0" />
          </children>
       </HBox>
       <HBox layoutX="10.0" layoutY="62.0">
