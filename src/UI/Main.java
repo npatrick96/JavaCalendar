@@ -10,8 +10,7 @@ import javafx.stage.Stage;
 /**
  * Created by John on 4/22/15.
  */
-public class Main extends Application{
-
+public class Main extends Application{ 
     public static void main(String[] args){
         launch(args);
     }

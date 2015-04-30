@@ -41,6 +41,8 @@ public class MainController {
     Button addEvent;
     @FXML 
     ColorPicker colorPicker;
+    @FXML
+    Button todayButton;
 
     int scale = 25;
     
@@ -176,13 +178,7 @@ public class MainController {
             }
         });
 
-        Color background = getContrastColor(getSelectedColor());
-        String asString = background.toString();
-        String mainAsString = getSelectedColor().toString();
-        String backgroundAsHex = "#" + asString.substring(2, asString.length());
-        String foreGroundAsText = "#" + mainAsString.substring(2, mainAsString.length());
-
-        appointmentButton.setStyle("-fx-background-color: " + backgroundAsHex + "; -fx-border-color: " + foreGroundAsText + ";");
+        appointmentButton.setStyle("-fx-background-color: " + getBackgroundColorAsHEx() + "; -fx-border-color: " + getSelectedColorAsHex()+ ";");
 
         double offset = ((scale * 2 * startHour) - 1) + ((calendar.get(Calendar.MINUTE) / 30.0f) - scale);
 
@@ -200,6 +196,21 @@ public class MainController {
 
         appointmentButton.setTextFill(getSelectedColor());
         addToCanvas(appointmentButton);
+    }
+    String getBackgroundColorAsHEx(){
+    	String background= getBackgroundToSelectedColor().toString();
+    	String BackgroundAsHex = "#" + background.substring(2, background.length());
+    	return BackgroundAsHex;
+    }
+    
+    Color getBackgroundToSelectedColor(){
+    	return getContrastColor(getSelectedColor());
+    }
+    
+    String getSelectedColorAsHex(){
+    	String SelectedColorAsString = getSelectedColor().toString();
+    	String SelectedColorAsText = "#" + SelectedColorAsString.substring(2, SelectedColorAsString.length());
+    	return SelectedColorAsText;
     }
 
     int getEventStart(Appointment appt){
@@ -320,6 +331,9 @@ public class MainController {
     @FXML
     void setColor(){
     	drawDayStructure();
+    	todayButton.setStyle(" -fx-border-color: " + getSelectedColorAsHex()+ ";");
+    	addEvent.setStyle(" -fx-border-color: " + getSelectedColorAsHex()+ ";");
+    	colorPicker.setStyle(" -fx-border-color: " + getSelectedColorAsHex()+ ";");
     }
     
     Color getSelectedColor(){
