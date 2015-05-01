@@ -298,7 +298,7 @@ public class MainController {
     void editAppointment(Appointment appt) throws IOException {
         Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("EventAdd.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Event.fxml"));
         Parent root = (Parent) loader.load();
         Scene scene = new Scene(root, 283, 330);
 
@@ -308,7 +308,7 @@ public class MainController {
         stage.setTitle("Editing event: " + appt.name);
         stage.setScene(scene);
         stage.setOnHiding((event) -> {
-            drawDayStructure();
+        	drawDayStructure();
         });
         stage.show();
     }
@@ -317,10 +317,11 @@ public class MainController {
     void addEvent() throws IOException {
         Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("EventAdd.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Event.fxml"));
         Parent root = (Parent) loader.load();
         Scene scene = new Scene(root, 283, 330);
-
+        
+        stage.setTitle("Add a New Event");
         stage.setScene(scene);
         stage.setOnHiding((event) -> {
             drawDayStructure();
