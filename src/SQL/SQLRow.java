@@ -20,7 +20,6 @@ public class SQLRow extends SQLizable{
         Class<?> objClass = f.get(this).getClass();
         String[] names = objClass.getName().split("\\.");
         String className = names[names.length - 1].toLowerCase();
-        System.out.println(className);
 
         int item = (int) f.get(this);
         ResultSet attributes = query("SELECT * FROM " + className + " WHERE id='" + item + "'");
@@ -44,7 +43,6 @@ public class SQLRow extends SQLizable{
 
         public String getSchemaComponentForField(Field f){
             Class<?> type = f.getType();
-            System.out.printf("");
             if (type == int.class || type == boolean.class){
                 return f.getName() + " INTEGER";
             }
@@ -185,7 +183,7 @@ public class SQLRow extends SQLizable{
                 conn = DriverManager.getConnection("jdbc:sqlite:" + dataBaseName());
                 Statement q = conn.createStatement();
                 q.setQueryTimeout(30);
-                System.out.println(query);
+
                 set = q.executeQuery(query);
 
             } catch (SQLException e){

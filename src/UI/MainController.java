@@ -96,22 +96,27 @@ public class MainController {
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         int row = 0,
             numDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-
         for (int i = 0; i < numDays; ++i){
-
             Button day = getMonthButton(calendar.getTime());
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
             monthView.add(day, dayOfWeek - 1, row);
-
             if (dayOfWeek == Calendar.SATURDAY){
                 row ++;
             }
-
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
-
         calendar.setTime(current);
         setMonthText();
+    }
+
+    @FXML
+    void loadDay(){
+        Date today = calendar.getTime();
+        ArrayList<Appointment> meetings = Appointment.getAppointments(today);
+
+        for (Appointment appt: meetings){
+            drawAppointment(appt);
+        }
     }
 
     void setMonthText(){
@@ -128,8 +133,8 @@ public class MainController {
 
         Button day = new Button();
         day.setBackground(Background.EMPTY);
-        day.setText("" + calendar.get(Calendar.DAY_OF_MONTH
-        ));
+        day.setText("" + calendar.get(Calendar.DAY_OF_MONTH));
+        day.setTextFill(getSelectedColor());
         day.setOnMouseClicked((event -> {
             calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.getText()));
 
@@ -137,9 +142,7 @@ public class MainController {
             setMonthText();
 
         }));
-
         calendar.setTime(curr);
-
         return day;
     }
 
@@ -153,20 +156,10 @@ public class MainController {
         return month;
     }
 
-    @FXML
-    void loadDay(){
-        Date today = calendar.getTime();
-        ArrayList<Appointment> meetings = Appointment.getAppointments(today);
-
-        for (Appointment appt: meetings){
-            drawAppointment(appt);
-        }
-    }
-
     void drawAppointment(Appointment appt){
 
-        int startHour = getEventStart(appt);
-        int endHour = getEventEnd(appt);
+        int startHour = Appointment.getEventStart(appt);
+        int endHour = Appointment.getEventEnd(appt);
 
         Button appointmentButton = new Button(appt.name + "\n" + appt.address);
         appointmentButton.setTranslateX(getDayViewWidth() / 4);
@@ -177,8 +170,6 @@ public class MainController {
                 e.printStackTrace();
             }
         });
-
-        appointmentButton.setStyle("-fx-background-color: " + getBackgroundColorAsHEx() + "; -fx-border-color: " + getSelectedColorAsHex()+ ";");
 
         double offset = ((scale * 2 * startHour) - 1) + ((calendar.get(Calendar.MINUTE) / 30.0f) - scale);
 
@@ -197,15 +188,6 @@ public class MainController {
         appointmentButton.setTextFill(getSelectedColor());
         addToCanvas(appointmentButton);
     }
-    String getBackgroundColorAsHEx(){
-    	String background= getBackgroundToSelectedColor().toString();
-    	String BackgroundAsHex = "#" + background.substring(2, background.length());
-    	return BackgroundAsHex;
-    }
-    
-    Color getBackgroundToSelectedColor(){
-    	return getContrastColor(getSelectedColor());
-    }
     
     String getSelectedColorAsHex(){
     	String SelectedColorAsString = getSelectedColor().toString();
@@ -213,30 +195,15 @@ public class MainController {
     	return SelectedColorAsText;
     }
 
-    int getEventStart(Appointment appt){
-        Date current = calendar.getTime();
 
-        calendar.setTime(appt.start);
-        int hourstart = calendar.get(Calendar.HOUR_OF_DAY);
-        calendar.setTime(current);
-        return hourstart;
-    }
-
-    int getEventEnd(Appointment appt){
-        Date current = calendar.getTime();
-
-        calendar.setTime(appt.end);
-        int hourEnd = calendar.get(Calendar.HOUR_OF_DAY);
-        calendar.setTime(current);
-        return hourEnd;
-    }
 
     void drawDayStructure(){
         int totalHeight = scale * 2 * 26;
         setScrollableHeight(totalHeight);
 
         Pane content = (Pane) dayView.getContent();
-        content.getChildren().removeAll(content.getChildren());
+        content.getChildren().clear();
+
         setHalfHourLine(scale);
 
         for (int i = 1; i < 24; ++i){
@@ -315,23 +282,13 @@ public class MainController {
 
     @FXML
     void addEvent() throws IOException {
-        Stage stage = new Stage();
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Event.fxml"));
-        Parent root = (Parent) loader.load();
-        Scene scene = new Scene(root, 283, 330);
-        
-        stage.setTitle("Add a New Event");
-        stage.setScene(scene);
-        stage.setOnHiding((event) -> {
-            drawDayStructure();
-        });
-        stage.show();
+        editAppointment(new Appointment());
     }
     
     @FXML
     void setColor(){
     	drawDayStructure();
+        populateMonthView();
     	todayButton.setStyle(" -fx-border-color: " + getSelectedColorAsHex()+ ";");
     	addEvent.setStyle(" -fx-border-color: " + getSelectedColorAsHex()+ ";");
     	colorPicker.setStyle(" -fx-border-color: " + getSelectedColorAsHex()+ ";");
@@ -341,18 +298,4 @@ public class MainController {
     	Color selectedColor = colorPicker.getValue();
     	return selectedColor;	 
     }
-	
-	private void switchScreen(String FXMLFile) throws IOException {
-		Parent home_page_parent = FXMLLoader.load(getClass().getResource(FXMLFile));
-		Scene home_page_scene = new Scene(home_page_parent);
-		Stage app_stage = (Stage) addEvent.getScene().getWindow();
-		app_stage.setScene(home_page_scene);
-		app_stage.show();
-	}
-
-    public static Color getContrastColor(Color color) {
-        double y = (299 * color.getRed() + 587 * color.getGreen() + 114 * color.getBlue()) / 1000;
-        return y >= 128 ? color.BLACK : color.WHITE;
-    }
-
 }

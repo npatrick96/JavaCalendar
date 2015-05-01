@@ -14,7 +14,11 @@ public class Appointment extends SQLRow {
     public Date start, end;
 
     public Appointment(){
-
+        this.name = "Default Name";
+        this.description = "";
+        this.address = "";
+        this.start = new Date();
+        this.end = new Date();
     }
 
     public static ArrayList<Appointment> getAppointments(Date date){
@@ -52,5 +56,36 @@ public class Appointment extends SQLRow {
                 this.address == that.address &&
                 this.start == that.start &&
                 this.end == that.end;
+    }
+
+    public static int getEventStart(Appointment appt){
+        Calendar calendar = Calendar.getInstance();
+        Date current = calendar.getTime();
+
+        calendar.setTime(appt.start);
+        int hourstart = calendar.get(Calendar.HOUR_OF_DAY);
+        calendar.setTime(current);
+        return hourstart;
+    }
+
+    public static int getEventEnd(Appointment appt){
+        Calendar calendar = Calendar.getInstance();
+        Date current = calendar.getTime();
+
+        calendar.setTime(appt.end);
+        int hourEnd = calendar.get(Calendar.HOUR_OF_DAY);
+        calendar.setTime(current);
+        return hourEnd;
+    }
+
+    public static Appointment deepCopy(Appointment apt){
+        Appointment newAppt = new Appointment();
+        newAppt.name = apt.name;
+        newAppt.description = apt.description;
+        newAppt.address = apt.address;
+        newAppt.start = apt.start;
+        newAppt.end = apt.end;
+
+        return newAppt;
     }
 }
