@@ -4,8 +4,10 @@ import Model.Appointment;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.time.Instant;
@@ -14,6 +16,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
+
+
 
 public class EventController {
 
@@ -31,38 +35,58 @@ public class EventController {
 	TextArea Notes;
 	@FXML
 	DatePicker date;
+	@FXML
+	Label status;
 
 	public Appointment current;
 
 	@FXML
 	void CloseWindow(){
-		getFromView();
-		current.save();
-
-		Stage parent = (Stage) StartTime.getScene().getWindow();
-		parent.hide();
+		if (getFromView() == true){
+			current.save();
+			Stage parent = (Stage) StartTime.getScene().getWindow();
+			parent.hide();
+		}
+		return;
 	}
+	
 
-	void getFromView(){
+	
+	boolean getFromView(){
 		if (current == null){
 			current = new Appointment();
 		}
-
-		current.name = Event.getText();
-		current.description = Notes.getText();
-		current.address = Location.getText();
-
-
-		Calendar calendar = Calendar.getInstance();
-		Date now = calendar.getTime();
-
-		Instant selected = date.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
-		Date day = Date.from(selected);
-
-		current.start = hourStringToDate(StartTime.getText(), day);
-		current.end = hourStringToDate(EndTime.getText(), day);
-
-		calendar.setTime(now);
+		if (Event.getText().isEmpty() ){
+			status.setText("Please enter the event title");
+			status.setTextFill(Color.RED);
+			return false;
+		}else if (StartTime.getText().isEmpty()) {
+			status.setText("Please enter the start time");
+			status.setTextFill(Color.RED);
+			return false;
+		}else if(EndTime.getText().isEmpty()){
+			status.setText("Please enter the end time");
+			status.setTextFill(Color.RED);
+			return false;
+		}else {
+		
+			current.name = Event.getText();
+			current.description = Notes.getText();
+			current.address = Location.getText();
+	
+	
+			Calendar calendar = Calendar.getInstance();
+			Date now = calendar.getTime();
+	
+			Instant selected = date.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+			Date day = Date.from(selected);
+	
+			current.start = hourStringToDate(StartTime.getText(), day);
+			current.end = hourStringToDate(EndTime.getText(), day);
+	
+			calendar.setTime(now);
+			return true;
+		}
 	}
 
 	public void initialize(){
@@ -88,11 +112,16 @@ public class EventController {
 		Calendar c = Calendar.getInstance();
 		Date prev = c.getTime();
 		c.setTime(day);
-
 		String[] hhmm = time.split(":");
-		int hour = Integer.parseInt(hhmm[0]);
+		try{
+			int hour = Integer.parseInt(hhmm[0]);
+			c.set(Calendar.HOUR_OF_DAY, hour);
+		}catch(NumberFormatException e){
+			status.setText("Invalid date state format");
+			status.setTextFill(Color.RED);
+			return null;
+		}
 
-		c.set(Calendar.HOUR_OF_DAY, hour);
 
 		if (hhmm.length > 1){
 			int minutes = Integer.parseInt(hhmm[1].replace(" ", ""));
