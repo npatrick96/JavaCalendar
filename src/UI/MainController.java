@@ -50,6 +50,8 @@ public class MainController {
     int scale = 25;
     
     Calendar calendar = Calendar.getInstance();
+    ArrayList<Appointment> seen = new ArrayList<>();
+    public static final double padding = 20;
 
     @FXML
     void initialize(){
@@ -150,11 +152,11 @@ public class MainController {
     @FXML
     void loadDay(){
         Date today = calendar.getTime();
-        ArrayList<Appointment> meetings = Appointment.getAppointments(today);
+        seen = new ArrayList<>();
 
-        for (Appointment appt: meetings){
-            System.out.println("Added appt: " + appt.name + ", " + appt.id());
-            drawAppointment(appt);
+        for (int i = 0; i < 24; ++i) {
+            ArrayList<Appointment> meetings = Appointment.getAppointmentsFromHour(today, i + 1);
+            drawHour(meetings);
         }
     }
 
@@ -195,42 +197,36 @@ public class MainController {
         return month;
     }
 
-    void drawAppointment(Appointment appt){
+    void drawHour(ArrayList<Appointment> appointments){
+        for (int i = 0; i < appointments.size(); ++i) {
+            Appointment appt = appointments.get(i);
+            if (seen.contains(appt))
+                continue;
 
-        int startHour = Appointment.getEventStart(appt);
-        int endHour = Appointment.getEventEnd(appt);
+            int startHour = Appointment.getEventStart(appt);
+            int endHour = Appointment.getEventEnd(appt);
 
-        Date current = calendar.getTime();
-        calendar.setTime(appt.start);
+            double width = getDayViewWidth() / appointments.size();
+            double height = (endHour - startHour) >= 1 ? (endHour - startHour) * scale : scale;
+            double offsetx = (i * width) + 1;
+            double offsety = ((scale * 2 * startHour) - 1) + (calendar.get(Calendar.MINUTE) - scale);
+            String title = appt.name + "\n" + appt.address;
 
-        Button appointmentButton = new Button(appt.name + "\n" + appt.address);
-        appointmentButton.setTranslateX(getDayViewWidth() / 4);
-        appointmentButton.setOnAction((event) -> {
-            try {
-                editAppointment(appt);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-
-        double offset = ((scale * 2 * startHour) - 1) + (calendar.get(Calendar.MINUTE) - scale);
-
-        appointmentButton.setTranslateY(offset);
-        appointmentButton.setMinWidth(getDayViewWidth() / 2);
-
-        double height = (endHour - startHour) >= 1 ? (endHour - startHour) * scale : scale;
-
-
-        //Use Pref Size is required to prevent the java UI Calculator from overriding the prefered value.
-        //This is only a problem for code-built nodes
-        appointmentButton.setMinHeight(Control.USE_PREF_SIZE);
-        appointmentButton.setPrefHeight(height * 2);
-        appointmentButton.setMaxHeight(Control.USE_PREF_SIZE);
-
-        appointmentButton.setTextFill(getSelectedColor());
-        addToCanvas(appointmentButton);
-
-        calendar.setTime(current);
+            Button appointment = new Button(title);
+            appointment.setTranslateY(offsety);
+            appointment.setTranslateX(offsetx + padding);
+            appointment.setPrefHeight(height * 2);
+            appointment.setPrefWidth(width - padding);
+            appointment.setOnAction((event) -> {
+                try {
+                    editAppointment(appt);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            appointment.setTextFill(getSelectedColor());
+            addToCanvas(appointment);
+        }
     }
     
     String getSelectedColorAsHex(){

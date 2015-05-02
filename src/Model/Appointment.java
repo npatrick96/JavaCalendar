@@ -49,6 +49,30 @@ public class Appointment extends SQLRow {
         return meetings;
     }
 
+    public static ArrayList<Appointment> getAppointmentsFromHour(Date day, int hour){
+        Calendar calendar = Calendar.getInstance();
+        Date current = calendar.getTime();
+
+        calendar.setTime(day);
+
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        Date dayStart = calendar.getTime();
+
+        calendar.add(Calendar.HOUR_OF_DAY, 1);
+        Date dayEnd = calendar.getTime();
+
+        calendar.setTime(current);
+
+        String where = "start >= " + dayStart.getTime() + " AND start < " + dayEnd.getTime();
+        ArrayList<Appointment> meetings = new Appointment().allWhere(where);
+
+        return meetings;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj.getClass() != Appointment.class){
