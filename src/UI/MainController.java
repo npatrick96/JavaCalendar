@@ -77,6 +77,7 @@ public class MainController {
     void advanceMonth(){
         calendar.roll(Calendar.MONTH, true);
         populateMonthView();
+        drawDayStructure();
     }
 
     @FXML
@@ -91,6 +92,7 @@ public class MainController {
     void retreatMonth(){
         calendar.roll(Calendar.MONTH, false);
         populateMonthView();
+        drawDayStructure();
     }
 
     @FXML
