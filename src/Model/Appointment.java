@@ -2,9 +2,14 @@ package Model;
 
 import SQL.SQLRow;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Scanner;
 
 /**
  * Created by John on 4/22/15.
@@ -87,5 +92,50 @@ public class Appointment extends SQLRow {
         newAppt.end = apt.end;
 
         return newAppt;
+    }
+
+    public static void saveAllToFile( String filePath) throws IOException {
+        ArrayList<Appointment> appointments = new Appointment().all();
+        FileWriter writer = new FileWriter(new File(filePath));
+
+        for (Appointment appt: appointments){
+            String asString = getFileFormat(appt);
+            writer.write(asString);
+        }
+        writer.flush();
+        writer.close();
+    }
+
+    public static ArrayList<Appointment> loadFromFile( String filepath ) throws FileNotFoundException {
+        Scanner scanner = new Scanner(new File(filepath));
+        ArrayList<Appointment> appointments = fromReader(scanner);
+        return appointments;
+    }
+
+    public static String getFileFormat(Appointment appt){
+        String save = "";
+        save += appt.name + "::";
+        save += appt.address + "::";
+        save += appt.description + "::";
+        save += appt.start.getTime() + "::";
+        save += appt.end.getTime() + "::";
+        System.out.println(save);
+        return save;
+    }
+
+    public static ArrayList<Appointment> fromReader(Scanner scanner){
+        scanner.useDelimiter("\\:\\:");
+        ArrayList<Appointment> appointments = new ArrayList<>();
+        while(scanner.hasNext()){
+            Appointment curr = new Appointment();
+            curr.name = scanner.next();
+            curr.address = scanner.next();
+            curr.description = scanner.next();
+            curr.start = new Date(Long.parseLong(scanner.next()));
+            curr.end = new Date(Long.parseLong(scanner.next()));
+            System.out.println("Loaded appointment: " + curr.name);
+            appointments.add(curr);
+        }
+        return appointments;
     }
 }

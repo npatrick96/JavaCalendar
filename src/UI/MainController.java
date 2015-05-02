@@ -14,8 +14,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
@@ -107,6 +110,41 @@ public class MainController {
         }
         calendar.setTime(current);
         setMonthText();
+    }
+
+    @FXML
+    void closeApp(){
+        Stage thisStage = (Stage) dayView.getScene().getWindow();
+        thisStage.close();
+    }
+
+    @FXML
+    void loadFromFile() {
+        FileChooser findChooser = new FileChooser();
+        findChooser.setTitle("Select a file to import");
+        findChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text File", "*.txt"), new FileChooser.ExtensionFilter("Calendar Files", "*.jcf"));
+        File path = findChooser.showOpenDialog(dayView.getScene().getWindow());
+        try {
+            ArrayList<Appointment> appointments = Appointment.loadFromFile(path.getPath());
+            for (Appointment apt: appointments){
+                apt.save();
+            }
+        } catch (FileNotFoundException e) {
+            statusLabel.setText("Couldn't find file!");
+        }
+    }
+
+    @FXML
+    void saveToFile() {
+        FileChooser saveChooser = new FileChooser();
+        saveChooser.setTitle("Select a location to export your calendar");
+        saveChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text File", "*.txt"), new FileChooser.ExtensionFilter("Calendar Files", "*.jcf"));
+        File path = saveChooser.showSaveDialog(dayView.getScene().getWindow());
+        try {
+            Appointment.saveAllToFile(path.getPath());
+        } catch (IOException e) {
+            statusLabel.setText("Couldn't save to file!");
+        }
     }
 
     @FXML
