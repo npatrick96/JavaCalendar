@@ -10,7 +10,7 @@ import java.util.Date;
  */
 public class SQLRow extends SQLizable{
 
-    protected int id;
+    public int id;
 
     public boolean isTable(Object o){
         return o.getClass().isAssignableFrom(SQLRow.class);

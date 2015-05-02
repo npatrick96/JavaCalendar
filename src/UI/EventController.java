@@ -2,11 +2,7 @@ package UI;
 
 import Model.Appointment;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -41,18 +37,30 @@ public class EventController {
 	public Appointment current;
 
 	@FXML
-	void CloseWindow(){
-		if (getFromView() == true){
+	void save(){
+		if (canSave()){
 			current.save();
-			Stage parent = (Stage) StartTime.getScene().getWindow();
-			parent.hide();
+			closeWindow();
 		}
 		return;
+	}
+
+	@FXML
+	void closeWindow(){
+		Stage parent = (Stage) StartTime.getScene().getWindow();
+		parent.hide();
+	}
+
+	@FXML
+	void deleteEvent(){
+		System.out.println("Deleting event " + current.name + ", " + current.id());
+		current.delete();
+		closeWindow();
 	}
 	
 
 	
-	boolean getFromView(){
+	boolean canSave(){
 		if (current == null){
 			current = new Appointment();
 		}

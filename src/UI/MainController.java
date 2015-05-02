@@ -115,6 +115,7 @@ public class MainController {
         ArrayList<Appointment> meetings = Appointment.getAppointments(today);
 
         for (Appointment appt: meetings){
+            System.out.println("Added appt: " + appt.name + ", " + appt.id());
             drawAppointment(appt);
         }
     }
@@ -161,6 +162,9 @@ public class MainController {
         int startHour = Appointment.getEventStart(appt);
         int endHour = Appointment.getEventEnd(appt);
 
+        Date current = calendar.getTime();
+        calendar.setTime(appt.start);
+
         Button appointmentButton = new Button(appt.name + "\n" + appt.address);
         appointmentButton.setTranslateX(getDayViewWidth() / 4);
         appointmentButton.setOnAction((event) -> {
@@ -171,7 +175,7 @@ public class MainController {
             }
         });
 
-        double offset = ((scale * 2 * startHour) - 1) + ((calendar.get(Calendar.MINUTE) / 30.0f) - scale);
+        double offset = ((scale * 2 * startHour) - 1) + (calendar.get(Calendar.MINUTE) - scale);
 
         appointmentButton.setTranslateY(offset);
         appointmentButton.setMinWidth(getDayViewWidth() / 2);
@@ -187,6 +191,8 @@ public class MainController {
 
         appointmentButton.setTextFill(getSelectedColor());
         addToCanvas(appointmentButton);
+
+        calendar.setTime(current);
     }
     
     String getSelectedColorAsHex(){

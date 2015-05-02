@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
-
 <AnchorPane prefHeight="334.0" prefWidth="278.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.EventController">
    <children>
       <TextField fx:id="Event" layoutX="88.0" layoutY="14.0" />
@@ -16,14 +12,12 @@
       <Label layoutX="28.0" layoutY="19.0" text="Event" />
       <Label layoutX="32.0" layoutY="52.0" text="Date" />
       <Label layoutX="18.0" layoutY="89.0" text="Start Time" />
+      <Label layoutX="20.0" layoutY="125.0" text="End Time" />
+      <TextField fx:id="EndTime" layoutX="88.0" layoutY="120.0" promptText="hh:mm" />
       <Label layoutX="19.0" layoutY="162.0" text="Location" />
       <Label layoutX="29.0" layoutY="191.0" text="Notes" />
-      <Button fx:id="Confirm" layoutX="183.0" layoutY="301.0" mnemonicParsing="false" onAction="#CloseWindow" text="Confirm" />
-      <Label layoutX="20.0" layoutY="125.0" text="End Time" />
-      <Label fx:id="status" layoutX="12.0" layoutY="312.0">
-         <font>
-            <Font size="10.0" />
-         </font></Label>
-      <TextField fx:id="EndTime" layoutX="88.0" layoutY="120.0" promptText="hh:mm" />
+      <Button fx:id="Confirm" layoutX="208.0" layoutY="301.0" mnemonicParsing="false" onAction="#save" text="Confirm" />
+      <Button layoutX="16.0" layoutY="301.0" mnemonicParsing="false" onAction="#deleteEvent" text="Delete" />
+      <Button fx:id="Confirm1" layoutX="149.0" layoutY="301.0" mnemonicParsing="false" onAction="#closeWindow" text="Cancel" />
    </children>
 </AnchorPane>

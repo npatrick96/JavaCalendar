@@ -14,9 +14,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
-/**
- * Created by John on 4/22/15.
- */
 public class AppointmentTest {
 
     @Before
@@ -44,7 +41,8 @@ public class AppointmentTest {
 
     @After
     public void tearDown() throws Exception {
-
+        new Appointment().drop();
+        Calendar.getInstance().setTime(new Date());
     }
 
     @Test
