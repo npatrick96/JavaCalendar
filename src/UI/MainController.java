@@ -135,7 +135,8 @@ public class MainController {
             if (lastSelectedButton != null)
                 lastSelectedButton.setTextFill(getSelectedColor());
 
-            day.setTextFill(Color.RED);
+            if (getSelectedColor().getRed() > 0.5){day.setTextFill(Color.BLACK);}
+            else{day.setTextFill(Color.RED);}
             lastSelectedButton = day;
 
             drawDayStructure();
