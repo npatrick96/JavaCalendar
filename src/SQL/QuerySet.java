@@ -13,7 +13,8 @@ public class QuerySet<T extends SQLRow> {
     * Customizable lazyness
     */
 
-    private int size, currentIndex;
+    public int size;
+    private int currentIndex;
     private ArrayList<Integer> cached;
     private String query, tableName, where, database;
     private Class<?> type;
@@ -32,7 +33,10 @@ public class QuerySet<T extends SQLRow> {
     public void setQuery(String tableName, String where){
         this.tableName = tableName;
         this.where = where;
-        this.query = "SELECT id FROM " + tableName + " WHERE " + where;
+        if (query != null)
+            this.query = "SELECT id FROM " + tableName + " WHERE " + where;
+        else
+            this.query = "SELECT id FROM " + tableName;
         this.populateIDs();
     }
 
@@ -50,6 +54,8 @@ public class QuerySet<T extends SQLRow> {
         try {
             T item = newObject();
             T returned = (T)item.getFromResultSet(resultSet).get(0);
+            currentIndex++;
+
             return returned;
 
         } catch (IllegalAccessException e) {
@@ -57,7 +63,6 @@ public class QuerySet<T extends SQLRow> {
         } catch (InstantiationException e) {
             e.printStackTrace();
         }
-
         currentIndex++;
 
         return null;
@@ -75,6 +80,7 @@ public class QuerySet<T extends SQLRow> {
                 return;
             }
             while(ids.next()){
+                System.out.println(ids.getInt(0));
                 Integer id = ids.getInt(0);
                 this.cached.add(id);
             }

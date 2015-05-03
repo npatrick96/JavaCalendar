@@ -6,10 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by John on 4/22/15.
@@ -80,9 +77,9 @@ public class Appointment extends SQLRow {
         }
         Appointment that = (Appointment) obj;
 
-        return this.name == that.name &&
-                this.description == that.description &&
-                this.address == that.address &&
+        return Objects.equals(this.name, that.name) &&
+                Objects.equals(this.description, that.description) &&
+                Objects.equals(this.address, that.address) &&
                 this.start == that.start &&
                 this.end == that.end;
     }

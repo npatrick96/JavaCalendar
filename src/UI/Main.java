@@ -7,10 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-/**
- * Created by John on 4/22/15.
- */
-public class Main extends Application{ 
+public class Main extends Application{
     public static void main(String[] args){
         launch(args);
     }
@@ -33,13 +30,10 @@ public class Main extends Application{
 
         stage.getIcons().addAll(icon, icon16, icon24, icon32, icon48, icon64, icon128, icon256, icon512);
 
-        stage.setTitle("A Java Calandar Appp");
+        stage.setTitle("The Java Day Calendar");
         stage.setScene(scene);
 
         System.out.println(stage.getIcons().size());
         stage.show();
-    }
-
-    public void loadMackDock(){
     }
 }

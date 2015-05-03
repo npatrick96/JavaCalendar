@@ -42,7 +42,6 @@ public class EventController {
 			current.save();
 			closeWindow();
 		}
-		return;
 	}
 
 	@FXML
@@ -97,6 +96,7 @@ public class EventController {
 		}
 	}
 
+	@FXML
 	public void initialize(){
 		Date currentTime = Calendar.getInstance().getTime();
 		ZonedDateTime selected = currentTime.toInstant().atZone(ZoneId.systemDefault());
@@ -154,6 +154,8 @@ public class EventController {
 
 		calendar.setTime(time);
 		String hourString = calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
+
+		calendar.setTime(prev);
 		return hourString;
 	}
 

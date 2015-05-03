@@ -47,7 +47,7 @@ public class AppointmentTest {
 
     @Test
     public void testSaving(){
-        ArrayList<Appointment> appointments = new Appointment().all();
+        ArrayList appointments = new Appointment().all();
         TestCase.assertEquals(100, appointments.size());
 
         new Appointment().drop();
@@ -61,15 +61,15 @@ public class AppointmentTest {
         calendar.setTime(new Date());
 
         for (int i = 0; i < 10; ++i){
-            ArrayList<Appointment> forDay = new Appointment().getAppointments(calendar.getTime());
+            ArrayList<Appointment> forDay = Appointment.getAppointments(calendar.getTime());
             assertEquals(10, forDay.size());
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
         calendar.setTime(new Date());
-        calendar.add(calendar.DAY_OF_MONTH, -1);
-        ArrayList<Appointment> yesterday = new Appointment().getAppointments(calendar.getTime());
-        assertTrue(yesterday.size() == 0);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        ArrayList<Appointment> yesterday = Appointment.getAppointments(calendar.getTime());
+        TestCase.assertEquals(0, yesterday.size());
     }
 
     @Test (expected = NullPointerException.class)
@@ -83,7 +83,7 @@ public class AppointmentTest {
         TestCase.assertFalse(obj1.equals(null));
     }
 
-    @Test (expected = NullPointerException.class)
+    @Test
     public void testGetAppointmentEnd(){
         Date today = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -103,13 +103,5 @@ public class AppointmentTest {
 
         assertEquals(8, startHour);
         assertEquals(10, endHour);
-
-        int shouldThrowException = Appointment.getEventEnd(null);
-        shouldThrowException = Appointment.getEventStart(null);
-    }
-
-    @Test
-    public void testLoadFromFile(){
-
     }
 }

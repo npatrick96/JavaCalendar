@@ -25,9 +25,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by John on 4/23/15.
- */
 public class MainController {
 
     @FXML
@@ -76,7 +73,6 @@ public class MainController {
 
     @FXML
     void advanceMonth(){
-        //calendar.roll(Calendar.MONTH, true);
         calendar.add(Calendar.MONTH, 1);
         populateMonthView();
         drawDayStructure();
@@ -92,7 +88,6 @@ public class MainController {
 
     @FXML
     void retreatMonth(){
-        //calendar.roll(Calendar.MONTH, false);
         calendar.add(Calendar.MONTH, -1);
         populateMonthView();
         drawDayStructure();
@@ -124,6 +119,33 @@ public class MainController {
         setMonthText();
     }
 
+    Button getMonthButton(Date time){
+
+        Date curr = calendar.getTime();
+        calendar.setTime(time);
+
+        Button day = new Button();
+        day.setBackground(Background.EMPTY);
+        day.setText("" + calendar.get(Calendar.DAY_OF_MONTH));
+        day.setTextFill(getSelectedColor());
+
+        day.setOnAction((event -> {
+            calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.getText()));
+
+            if (lastSelectedButton != null)
+                lastSelectedButton.setTextFill(getSelectedColor());
+
+            day.setTextFill(Color.RED);
+            lastSelectedButton = day;
+
+            drawDayStructure();
+            setMonthText();
+
+        }));
+        calendar.setTime(curr);
+        return day;
+    }
+
     @FXML
     void closeApp(){
         Stage thisStage = (Stage) dayView.getScene().getWindow();
@@ -136,11 +158,14 @@ public class MainController {
         findChooser.setTitle("Select a file to import");
         findChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text File", "*.txt"), new FileChooser.ExtensionFilter("Calendar Files", "*.jcf"));
         File path = findChooser.showOpenDialog(dayView.getScene().getWindow());
+        if (path == null) return;
         try {
             ArrayList<Appointment> appointments = Appointment.loadFromFile(path.getPath());
-            for (Appointment apt: appointments){
-                apt.save();
-            }
+
+            appointments.forEach(Model.Appointment::save);
+
+            drawDayStructure();
+
         } catch (FileNotFoundException e) {
             Alert failedToOpen = new Alert(Alert.AlertType.ERROR);
             failedToOpen.setTitle("Couldn't open file");
@@ -156,6 +181,7 @@ public class MainController {
         saveChooser.setTitle("Select a location to export your calendar");
         saveChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text File", "*.txt"), new FileChooser.ExtensionFilter("Calendar Files", "*.jcf"));
         File path = saveChooser.showSaveDialog(dayView.getScene().getWindow());
+        if (path == null) return;
         try {
             Appointment.saveAllToFile(path.getPath());
         } catch (IOException e) {
@@ -192,33 +218,6 @@ public class MainController {
         String year = "" + calendar.get(Calendar.YEAR);
         String day = "" + calendar.get(Calendar.DAY_OF_MONTH);
         monthYearLabel.setText(month + " " + day + ", " + year);
-    }
-
-    Button getMonthButton(Date time){
-
-        Date curr = calendar.getTime();
-        calendar.setTime(time);
-
-        Button day = new Button();
-        day.setBackground(Background.EMPTY);
-        day.setText("" + calendar.get(Calendar.DAY_OF_MONTH));
-        day.setTextFill(getSelectedColor());
-
-        day.setOnAction((event -> {
-            calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.getText()));
-
-            if (lastSelectedButton != null)
-                lastSelectedButton.setTextFill(getSelectedColor());
-
-            day.setTextFill(Color.RED);
-            lastSelectedButton = day;
-
-            drawDayStructure();
-            setMonthText();
-
-        }));
-        calendar.setTime(curr);
-        return day;
     }
 
     String getMonthForInt(int num) {
@@ -265,8 +264,7 @@ public class MainController {
     
     String getSelectedColorAsHex(){
     	String SelectedColorAsString = getSelectedColor().toString();
-    	String SelectedColorAsText = "#" + SelectedColorAsString.substring(2, SelectedColorAsString.length());
-    	return SelectedColorAsText;
+        return "#" + SelectedColorAsString.substring(2, SelectedColorAsString.length());
     }
 
 
@@ -348,9 +346,7 @@ public class MainController {
 
         stage.setTitle("Editing event: " + appt.name);
         stage.setScene(scene);
-        stage.setOnHiding((event) -> {
-        	drawDayStructure();
-        });
+        stage.setOnHiding((event) -> drawDayStructure());
         stage.show();
     }
 
@@ -369,7 +365,6 @@ public class MainController {
     }
     
     Color getSelectedColor(){
-    	Color selectedColor = colorPicker.getValue();
-    	return selectedColor;	 
+    	return colorPicker.getValue();
     }
 }
