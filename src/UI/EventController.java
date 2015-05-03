@@ -127,7 +127,6 @@ public class EventController {
 		}catch(NumberFormatException e){
 			status.setText("Invalid date state format");
 			status.setTextFill(Color.RED);
-			return null;
 		}
 
 

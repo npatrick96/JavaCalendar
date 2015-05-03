@@ -340,7 +340,7 @@ public class MainController {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Event.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root, 283, 330);
+        Scene scene = new Scene(root, 283, 355);
 
         EventController controller = loader.getController();
         controller.loadFromAppointment(appt);
