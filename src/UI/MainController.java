@@ -240,17 +240,17 @@ public class MainController {
             int startHour = Appointment.getEventStart(appt);
             int endHour = Appointment.getEventEnd(appt);
 
-            double width = getDayViewWidth() / appointments.size();
+            double width = (getDayViewWidth() - padding) / appointments.size();
             double height = (endHour - startHour) >= 1 ? (endHour - startHour) * scale : scale;
-            double offsetx = (i * width) + 1;
+            double offsetx = (i * width) + 1 + padding;
             double offsety = ((scale * 2 * startHour) - 1) + (calendar.get(Calendar.MINUTE) - scale);
             String title = appt.name + "\n" + appt.address;
 
             Button appointment = new Button(title);
             appointment.setTranslateY(offsety);
-            appointment.setTranslateX(offsetx + padding);
+            appointment.setTranslateX(offsetx);
             appointment.setPrefHeight(height * 2);
-            appointment.setPrefWidth(width - padding);
+            appointment.setPrefWidth(width);
             appointment.setOnAction((event) -> {
                 try {
                     editAppointment(appt);
@@ -340,10 +340,10 @@ public class MainController {
         Stage stage = new Stage();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Event.fxml"));
-        Parent root = (Parent) loader.load();
+        Parent root = loader.load();
         Scene scene = new Scene(root, 283, 330);
 
-        EventController controller = (EventController) loader.getController();
+        EventController controller = loader.getController();
         controller.loadFromAppointment(appt);
 
         stage.setTitle("Editing event: " + appt.name);
