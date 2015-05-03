@@ -107,4 +107,9 @@ public class AppointmentTest {
         int shouldThrowException = Appointment.getEventEnd(null);
         shouldThrowException = Appointment.getEventStart(null);
     }
+
+    @Test
+    public void testLoadFromFile(){
+
+    }
 }

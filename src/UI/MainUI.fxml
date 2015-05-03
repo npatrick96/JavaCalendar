@@ -17,7 +17,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem mnemonicParsing="false" onAction="#showAbout" text="About" />
             </items>
           </Menu>
         </menus>
@@ -29,7 +29,7 @@
             <ColorPicker fx:id="colorPicker" onAction="#setColor" />
         </items>
       </ToolBar>
-      <GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="137.0" prefWidth="301.0" VBox.vgrow="NEVER">
+      <GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="301.0" VBox.vgrow="NEVER">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="267.0" minWidth="10.0" prefWidth="241.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="93.0" minWidth="0.0" prefWidth="26.0" />
@@ -42,7 +42,7 @@
          <children>
             <Button mnemonicParsing="false" onAction="#advanceMonth" text="&gt;" textAlignment="CENTER" GridPane.columnIndex="2" />
             <Button layoutX="256.0" layoutY="12.0" mnemonicParsing="false" onAction="#retreatMonth" text="&lt;" textAlignment="CENTER" GridPane.columnIndex="1" />
-            <GridPane fx:id="monthView" GridPane.rowIndex="1">
+            <GridPane fx:id="monthView" hgap="3.0" vgap="3.0" GridPane.rowIndex="1">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -66,7 +66,7 @@
             </Label>
          </children>
       </GridPane>
-      <Line endX="200.0" startX="-100.0" strokeLineCap="ROUND" strokeMiterLimit="0.0" />
+      <Line endX="220.0" startX="-100.0" strokeLineCap="ROUND" strokeMiterLimit="0.0" />
       <ScrollPane fx:id="dayView" VBox.vgrow="ALWAYS">
          <content>
             <Pane />

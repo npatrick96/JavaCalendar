@@ -45,7 +45,8 @@ public class MainController {
     @FXML 
     ColorPicker colorPicker;
     @FXML
-    Button todayButton;
+    Button todayButton,
+    lastSelectedButton;
 
     int scale = 25;
     
@@ -75,7 +76,8 @@ public class MainController {
 
     @FXML
     void advanceMonth(){
-        calendar.roll(Calendar.MONTH, true);
+        //calendar.roll(Calendar.MONTH, true);
+        calendar.add(Calendar.MONTH, 1);
         populateMonthView();
         drawDayStructure();
     }
@@ -90,7 +92,8 @@ public class MainController {
 
     @FXML
     void retreatMonth(){
-        calendar.roll(Calendar.MONTH, false);
+        //calendar.roll(Calendar.MONTH, false);
+        calendar.add(Calendar.MONTH, -1);
         populateMonthView();
         drawDayStructure();
     }
@@ -99,6 +102,7 @@ public class MainController {
     void populateMonthView(){
         monthView.getChildren().removeAll(monthView.getChildren());
         Date current = calendar.getTime();
+        int selectedDay = calendar.get(Calendar.DAY_OF_MONTH);
 
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         int row = 0,
@@ -109,6 +113,10 @@ public class MainController {
             monthView.add(day, dayOfWeek - 1, row);
             if (dayOfWeek == Calendar.SATURDAY){
                 row ++;
+            }
+            boolean isCurrentDay = selectedDay == (i + 1);
+            if (isCurrentDay){
+                day.fire();
             }
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
@@ -134,7 +142,11 @@ public class MainController {
                 apt.save();
             }
         } catch (FileNotFoundException e) {
-            statusLabel.setText("Couldn't find file!");
+            Alert failedToOpen = new Alert(Alert.AlertType.ERROR);
+            failedToOpen.setTitle("Couldn't open file");
+            failedToOpen.setHeaderText("There was a problem opening " + path.getName() +"!");
+            failedToOpen.setContentText("Couldn't find the file " + path.getName());
+            failedToOpen.show();
         }
     }
 
@@ -147,7 +159,11 @@ public class MainController {
         try {
             Appointment.saveAllToFile(path.getPath());
         } catch (IOException e) {
-            statusLabel.setText("Couldn't save to file!");
+            Alert failedToOpen = new Alert(Alert.AlertType.ERROR);
+            failedToOpen.setTitle("Couldn't save to file");
+            failedToOpen.setHeaderText("There was a problem saving to " + path.getName() + "!");
+            failedToOpen.setContentText(e.getCause().toString());
+            failedToOpen.show();
         }
     }
 
@@ -160,6 +176,15 @@ public class MainController {
             ArrayList<Appointment> meetings = Appointment.getAppointmentsFromHour(today, i + 1);
             drawHour(meetings);
         }
+    }
+
+    @FXML
+    void showAbout(){
+        Alert aboutWindow = new Alert(Alert.AlertType.INFORMATION);
+        aboutWindow.setTitle("About Java Calendar");
+        aboutWindow.setHeaderText("About this app");
+        aboutWindow.setContentText("This app was written as part of the Computer Science Scalable Software class at Hendrix College.  All questions and issues can be reported and resolved through our github page :\nhttps://github.com/cd24/JavaCalendar\n\nThank you for using this app!");
+        aboutWindow.show();
     }
 
     void setMonthText(){
@@ -178,8 +203,15 @@ public class MainController {
         day.setBackground(Background.EMPTY);
         day.setText("" + calendar.get(Calendar.DAY_OF_MONTH));
         day.setTextFill(getSelectedColor());
-        day.setOnMouseClicked((event -> {
+
+        day.setOnAction((event -> {
             calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.getText()));
+
+            if (lastSelectedButton != null)
+                lastSelectedButton.setTextFill(getSelectedColor());
+
+            day.setTextFill(Color.RED);
+            lastSelectedButton = day;
 
             drawDayStructure();
             setMonthText();
