@@ -135,7 +135,8 @@ public class MainController {
             if (lastSelectedButton != null)
                 lastSelectedButton.setTextFill(getSelectedColor());
 
-            day.setTextFill(Color.RED);
+            if (getSelectedColor().getRed() > 0.5){day.setTextFill(Color.BLACK);}
+            else{day.setTextFill(Color.RED);}
             lastSelectedButton = day;
 
             drawDayStructure();
@@ -339,7 +340,7 @@ public class MainController {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Event.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root, 283, 330);
+        Scene scene = new Scene(root, 283, 355);
 
         EventController controller = loader.getController();
         controller.loadFromAppointment(appt);
