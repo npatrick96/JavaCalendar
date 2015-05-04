@@ -122,10 +122,7 @@ public class EventController {
 				badFormat.show();
 				return false;
 			}
-			System.out.println("The startTime of the event is: " + start.toString());
-			System.out.println("The endTime of the event is : "+end.toString());
-
-
+			
 			current.start = hourStringToDate(StartTime.getText(), day);
 			current.end = hourStringToDate(EndTime.getText(), day);
 
