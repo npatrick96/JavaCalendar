@@ -7,6 +7,9 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import javax.swing.*;
+import java.net.URL;
+
 public class Main extends Application{
     public static void main(String[] args){
         launch(args);
@@ -29,11 +32,23 @@ public class Main extends Application{
         Image icon512 = new Image(getClass().getResourceAsStream("calendar512.png"));
 
         stage.getIcons().addAll(icon, icon16, icon24, icon32, icon48, icon64, icon128, icon256, icon512);
+        loadDockIcon();
 
         stage.setTitle("The Java Day Calendar");
         stage.setScene(scene);
 
         System.out.println(stage.getIcons().size());
         stage.show();
+    }
+
+    public void loadDockIcon(){
+        try {
+            URL iconURL = Main.class.getResource("calendar512.png");
+            java.awt.Image image = new ImageIcon(iconURL).getImage();
+            com.apple.eawt.Application.getApplication().setDockIconImage(image);
+        } catch (Exception e) {
+            // Won't work on Windows or Linux.
+            System.out.println("Except: " + e);
+        }
     }
 }
