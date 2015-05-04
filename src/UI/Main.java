@@ -16,7 +16,7 @@ public class Main extends Application{
     public void start(Stage stage) throws Exception{
 
         Parent root = FXMLLoader.load(getClass().getResource("MainUI.fxml"));
-        Scene scene = new Scene(root, 310, 579);
+        Scene scene = new Scene(root, 310, 600);
 
         Image icon = new Image(getClass().getResourceAsStream("calendar.png"));
         Image icon16 = new Image(getClass().getResourceAsStream("calendar16.png"));

@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -50,6 +51,7 @@ public class MainController {
     Calendar calendar = Calendar.getInstance();
     ArrayList<Appointment> seen = new ArrayList<>();
     public static final double padding = 20;
+    ArrayList<Label> DayNames = new ArrayList<>(Arrays.asList(new Label("Sun"), new Label("Mon"), new Label("Tue"), new Label("Wed"), new Label("Thu"), new Label("Fri"), new Label("Sat")));
 
     @FXML
     void initialize(){
@@ -96,6 +98,7 @@ public class MainController {
     @FXML
     void populateMonthView(){
         monthView.getChildren().removeAll(monthView.getChildren());
+        loadDayNames();
         Date current = calendar.getTime();
         int selectedDay = calendar.get(Calendar.DAY_OF_MONTH);
 
@@ -105,7 +108,7 @@ public class MainController {
         for (int i = 0; i < numDays; ++i){
             Button day = getMonthButton(calendar.getTime());
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-            monthView.add(day, dayOfWeek - 1, row);
+            monthView.add(day, dayOfWeek - 1, row + 1);
             if (dayOfWeek == Calendar.SATURDAY){
                 row ++;
             }
@@ -117,6 +120,14 @@ public class MainController {
         }
         calendar.setTime(current);
         setMonthText();
+    }
+
+    void loadDayNames(){
+
+        for (int i = 0; i < 7; ++i){
+            Label day = DayNames.get(i);
+            monthView.add(day, i, 0);
+        }
     }
 
     Button getMonthButton(Date time){
@@ -135,8 +146,11 @@ public class MainController {
             if (lastSelectedButton != null)
                 lastSelectedButton.setTextFill(getSelectedColor());
 
-            if (getSelectedColor().getRed() > 0.5){day.setTextFill(Color.BLACK);}
-            else{day.setTextFill(Color.RED);}
+            if (getSelectedColor().getRed() > 0.5) {
+                day.setTextFill(Color.BLACK);
+            } else {
+                day.setTextFill(Color.RED);
+            }
             lastSelectedButton = day;
 
             drawDayStructure();
