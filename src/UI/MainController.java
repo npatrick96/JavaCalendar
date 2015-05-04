@@ -76,6 +76,7 @@ public class MainController {
     @FXML
     void advanceMonth(){
         calendar.add(Calendar.MONTH, 1);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
         populateMonthView();
         drawDayStructure();
     }
@@ -91,6 +92,7 @@ public class MainController {
     @FXML
     void retreatMonth(){
         calendar.add(Calendar.MONTH, -1);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
         populateMonthView();
         drawDayStructure();
     }
@@ -143,15 +145,7 @@ public class MainController {
         day.setOnAction((event -> {
             calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.getText()));
 
-            if (lastSelectedButton != null)
-                lastSelectedButton.setTextFill(getSelectedColor());
-
-            if (getSelectedColor().getRed() > 0.5) {
-                day.setTextFill(Color.BLACK);
-            } else {
-                day.setTextFill(Color.RED);
-            }
-            lastSelectedButton = day;
+            setFocus(day);
 
             drawDayStructure();
             setMonthText();
@@ -159,6 +153,18 @@ public class MainController {
         }));
         calendar.setTime(curr);
         return day;
+    }
+
+    void setFocus(Button day){
+        if (lastSelectedButton != null)
+            lastSelectedButton.setTextFill(getSelectedColor());
+
+        if (getSelectedColor().getRed() > 0.5) {
+            day.setTextFill(Color.BLACK);
+        } else {
+            day.setTextFill(Color.RED);
+        }
+        lastSelectedButton = day;
     }
 
     @FXML
