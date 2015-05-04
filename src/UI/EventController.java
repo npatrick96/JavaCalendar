@@ -87,7 +87,18 @@ public class EventController {
 	
 			Instant selected = date.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
 			Date day = Date.from(selected);
-	
+
+			Date start = hourStringToDate(StartTime.getText(), day);
+			Date end = hourStringToDate(EndTime.getText(), day);
+			if (start == null || end == null){
+				Alert badFormat = new Alert(Alert.AlertType.ERROR);
+				badFormat.setTitle("Invalid time");
+				badFormat.setHeaderText("Please enter a valid time in start or end");
+				badFormat.setContentText("A valid date format can be as follows:\nHH or HH:MM");
+				badFormat.show();
+				return false;
+			}
+
 			current.start = hourStringToDate(StartTime.getText(), day);
 			current.end = hourStringToDate(EndTime.getText(), day);
 	
@@ -125,8 +136,6 @@ public class EventController {
 			int hour = Integer.parseInt(hhmm[0]);
 			c.set(Calendar.HOUR_OF_DAY, hour);
 		}catch(NumberFormatException e){
-			status.setText("Invalid date state format");
-			status.setTextFill(Color.RED);
 			return null;
 		}
 
