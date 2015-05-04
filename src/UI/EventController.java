@@ -116,7 +116,7 @@ public class EventController {
 			if (start.after(end) ){
 				Alert badFormat = new Alert(Alert.AlertType.ERROR);
 				badFormat.setTitle("Invalid time");
-				badFormat.setHeaderText("Sorry,events cannot start after their end timePlease enter a valid time in start or end");
+				badFormat.setHeaderText("Alert: events cannot start after their end time.");
 				badFormat.setContentText("Please enter a valid time in start or end"+ 
 						"\n"+"☺☺☺ No time traveling plz!!! ☺☺☺");
 				badFormat.show();
