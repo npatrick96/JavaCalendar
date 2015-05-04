@@ -3,7 +3,6 @@ package UI;
 import Model.Appointment;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.time.Instant;
@@ -31,8 +30,6 @@ public class EventController {
 	TextArea Notes;
 	@FXML
 	DatePicker date;
-	@FXML
-	Label status;
 
 	public Appointment current;
 
@@ -92,9 +89,6 @@ public class EventController {
 			badFormat.setHeaderText("Please enter a valid time in end");
 			badFormat.setContentText("You did not enter an ending time.  Please enter a valid time.  Times can be formatted like\nHH or HH:MM, HH= Hour, MM = minutes");
 			badFormat.show();
-
-			status.setText("Please enter the end time");
-			status.setTextFill(Color.RED);
 			return false;
 		} else {
 
@@ -119,6 +113,18 @@ public class EventController {
 				badFormat.show();
 				return false;
 			}
+			if (start.after(end) ){
+				Alert badFormat = new Alert(Alert.AlertType.ERROR);
+				badFormat.setTitle("Invalid time");
+				badFormat.setHeaderText("Sorry,events cannot start after their end timePlease enter a valid time in start or end");
+				badFormat.setContentText("Please enter a valid time in start or end"+ 
+						"\n"+"☺☺☺ No time traveling plz!!! ☺☺☺");
+				badFormat.show();
+				return false;
+			}
+			System.out.println("The startTime of the event is: " + start.toString());
+			System.out.println("The endTime of the event is : "+end.toString());
+
 
 			current.start = hourStringToDate(StartTime.getText(), day);
 			current.end = hourStringToDate(EndTime.getText(), day);

@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefWidth="278.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.EventController">
+<AnchorPane prefHeight="340.0" prefWidth="278.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.EventController">
    <children>
       <TextField fx:id="Event" layoutX="88.0" layoutY="14.0" />
       <DatePicker fx:id="date" layoutX="88.0" layoutY="47.0" />
@@ -22,6 +22,5 @@
       <Button fx:id="Confirm" layoutX="208.0" layoutY="301.0" mnemonicParsing="false" onAction="#save" text="Confirm" />
       <Button layoutX="16.0" layoutY="301.0" mnemonicParsing="false" onAction="#deleteEvent" text="Delete" />
       <Button fx:id="Confirm1" layoutX="149.0" layoutY="301.0" mnemonicParsing="false" onAction="#closeWindow" text="Cancel" />
-      <Label fx:id="status" layoutX="16.0" layoutY="338.0" text="Status: All Good!" textFill="#07ee31" />
    </children>
 </AnchorPane>
