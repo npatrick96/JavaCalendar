@@ -59,38 +59,59 @@ public class EventController {
 	
 
 	
-	boolean canSave(){
-		if (current == null){
+	boolean canSave() {
+		if (current == null) {
 			current = new Appointment();
 		}
-		if (Event.getText().isEmpty() ){
-			status.setText("Please enter the event title");
-			status.setTextFill(Color.RED);
+		if (Event.getText().isEmpty()) {
+			Alert badFormat = new Alert(Alert.AlertType.ERROR);
+			badFormat.setTitle("No Event Name");
+			badFormat.setHeaderText("Events must have names");
+			badFormat.setContentText("The event must have a name, please enter a name to save the appointment!");
+			badFormat.show();
 			return false;
-		}else if (StartTime.getText().isEmpty()) {
-			status.setText("Please enter the start time");
-			status.setTextFill(Color.RED);
+		}
+		else if (date.getValue() == null){
+			Alert badFormat = new Alert(Alert.AlertType.ERROR);
+			badFormat.setTitle("No Event Date");
+			badFormat.setHeaderText("An Event must have a date");
+			badFormat.setContentText("The event must have a date.  Please use the date picker to select a day for the event to be scheduled.");
+			badFormat.show();
 			return false;
-		}else if(EndTime.getText().isEmpty()){
+		}
+		else if (StartTime.getText().isEmpty()) {
+			Alert badFormat = new Alert(Alert.AlertType.ERROR);
+			badFormat.setTitle("Invalid time");
+			badFormat.setHeaderText("Please enter a valid time in start");
+			badFormat.setContentText("You did not enter an starting time.  Please enter a valid time.  Times can be formatted like\nHH or HH:MM, HH= Hour, MM = minutes");
+			badFormat.show();
+			return false;
+		} else if (EndTime.getText().isEmpty()) {
+			Alert badFormat = new Alert(Alert.AlertType.ERROR);
+			badFormat.setTitle("Invalid time");
+			badFormat.setHeaderText("Please enter a valid time in end");
+			badFormat.setContentText("You did not enter an ending time.  Please enter a valid time.  Times can be formatted like\nHH or HH:MM, HH= Hour, MM = minutes");
+			badFormat.show();
+
 			status.setText("Please enter the end time");
 			status.setTextFill(Color.RED);
 			return false;
-		}else {
-		
+		} else {
+
 			current.name = Event.getText();
 			current.description = Notes.getText();
 			current.address = Location.getText();
-	
-	
+
+
 			Calendar calendar = Calendar.getInstance();
 			Date now = calendar.getTime();
-	
+
 			Instant selected = date.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
 			Date day = Date.from(selected);
 
 			Date start = hourStringToDate(StartTime.getText(), day);
 			Date end = hourStringToDate(EndTime.getText(), day);
-			if (start == null || end == null){
+			if (start == null || end == null) {
 				Alert badFormat = new Alert(Alert.AlertType.ERROR);
 				badFormat.setTitle("Invalid time");
 				badFormat.setHeaderText("Please enter a valid time in start or end");
@@ -101,7 +122,7 @@ public class EventController {
 
 			current.start = hourStringToDate(StartTime.getText(), day);
 			current.end = hourStringToDate(EndTime.getText(), day);
-	
+
 			calendar.setTime(now);
 			return true;
 		}
